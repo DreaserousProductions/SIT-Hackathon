@@ -23,15 +23,15 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const { wid, temp, humidity, moisture } = req.body; // Assuming you're sending data in the body
+    const { wid, temp, humidity } = req.body; // Assuming you're sending data in the body
 
     pool.getConnection((err, connection) => {
         if (err) {
             return res.status(500).json({ message: 'Database connection failed', error: err });
         }
 
-        const query = 'INSERT INTO ware_conditions (WID, TEMP, HUMIDITY, MOISTURE) VALUES (?, ?, ?, ?);';
-        connection.query(query, [Number(wid), Number(temp), Number(humidity), Number(moisture)], (err, result) => {
+        const query = 'INSERT INTO ware_conditions (WID, TEMP, HUMIDITY) VALUES (?, ?, ?, ?);';
+        connection.query(query, [Number(wid), Number(temp), Number(humidity)], (err, result) => {
             connection.release(); // Always release the connection
 
             if (err) {
