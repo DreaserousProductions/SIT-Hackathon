@@ -38,7 +38,7 @@ app.use('/', testRouter);
 // app.use('/live-stream', liveRouter);
 
 // Start HTTPS server
-https.createServer(options, app).listen(port, () => {
+https.createServer(app).listen(port, () => {
     console.log(`HTTPS Server running on port ${port}`);
 });
 
