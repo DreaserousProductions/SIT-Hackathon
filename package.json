@@ -1,0 +1,37 @@
+{
+  "name": "project1",
+  "version": "1.0.0",
+  "description": "Food supply chain tracking system.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DreaserousProductions/SIT-Hackathon.git"
+  },
+  "keywords": [
+    "node.js",
+    "express.js",
+    "RFID",
+    "DHT11",
+    "Pico",
+    "2W",
+    "Flutter",
+    "HTML5",
+    "CSS",
+    "Food",
+    "Supply",
+    "Chain",
+    "Tracking",
+    "System",
+    "temperature",
+    "humidity"
+  ],
+  "author": "Dreaserous Productions",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DreaserousProductions/SIT-Hackathon/issues"
+  },
+  "homepage": "https://github.com/DreaserousProductions/SIT-Hackathon#readme"
+}
