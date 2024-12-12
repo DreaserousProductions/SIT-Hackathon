@@ -32,10 +32,10 @@ const pool = mysql.createPool({
 
 // Import routes
 const testRouter = require('./routes/test');
-const liveRouter = require('./routes/live');
+// const liveRouter = require('./routes/live');
 
 app.use('/', testRouter);
-app.use('/live-stream', liveRouter);
+// app.use('/live-stream', liveRouter);
 
 // Start HTTPS server
 https.createServer(options, app).listen(port, () => {
