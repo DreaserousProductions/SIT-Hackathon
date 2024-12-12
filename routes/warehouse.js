@@ -14,10 +14,10 @@ router.get('/', (req, res) => {
             connection.release(); // Always release the connection
 
             if (err) {
-                return res.status(500).json({ message: 'Failed to retreive data', error: err });
+                return res.status(500).json({ message: 'Failed to retrieve data', error: err });
             }
 
-            res.status(200).json({ message: 'Data inserted successfully', result });
+            res.status(200).json({ message: 'Data successfully retrieved', result });
         });
     });
 });
