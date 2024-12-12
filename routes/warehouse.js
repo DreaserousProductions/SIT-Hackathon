@@ -3,6 +3,25 @@ const { pool } = require('../server');
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    pool.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database connection failed', error: err });
+        }
+
+        const query = 'SELECT * FROM ware_conditions;';
+        connection.query(query, (err, result) => {
+            connection.release(); // Always release the connection
+
+            if (err) {
+                return res.status(500).json({ message: 'Failed to retreive data', error: err });
+            }
+
+            res.status(200).json({ message: 'Data inserted successfully', result });
+        });
+    });
+});
+
 router.post('/', (req, res) => {
     const { wid, temp, humidity, moisture } = req.body; // Assuming you're sending data in the body
 
