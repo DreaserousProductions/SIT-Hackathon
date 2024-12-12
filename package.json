@@ -35,6 +35,10 @@
   },
   "homepage": "https://github.com/DreaserousProductions/SIT-Hackathon#readme",
   "dependencies": {
-    "express": "^4.21.2"
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "https": "^1.0.0",
+    "mysql2": "^3.11.5"
   }
 }
