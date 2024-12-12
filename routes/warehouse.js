@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
         }
 
         const query = 'INSERT INTO warehouses (WID, TEMP, HUMIDITY, MOISTURE) VALUES (?, ?, ?, ?);';
-        connection.query(query, [wid, temp, humidity, moisture], (err, result) => {
+        connection.query(query, [Number(wid), Number(temp), Number(humidity), Number(moisture)], (err, result) => {
             connection.release(); // Always release the connection
 
             if (err) {
