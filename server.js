@@ -1,5 +1,4 @@
 require('dotenv').config();
-const https = require('https');
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -40,7 +39,7 @@ const testRouter = require('./routes/test');
 app.use('/', testRouter);
 // app.use('/live-stream', liveRouter);
 
-// Start HTTPS server
-https.createServer(app).listen(port, () => {
-    console.log(`HTTPS Server running on port ${port}`);
+// Start HTTP server
+app.listen(port, () => {
+    console.log(`HTTP Server running on port ${port}`);
 });
