@@ -33,5 +33,8 @@
   "bugs": {
     "url": "https://github.com/DreaserousProductions/SIT-Hackathon/issues"
   },
-  "homepage": "https://github.com/DreaserousProductions/SIT-Hackathon#readme"
+  "homepage": "https://github.com/DreaserousProductions/SIT-Hackathon#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
 }
