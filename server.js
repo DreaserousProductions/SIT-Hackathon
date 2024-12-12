@@ -33,10 +33,10 @@ const pool = mysql.createPool({
 module.exports.pool = pool;
 
 // Import routes
-const testRouter = require('./routes/test');
+const warehouseRouter = require('./routes/warehouse');
 // const liveRouter = require('./routes/live');
 
-app.use('/', testRouter);
+app.use('/warehouse', warehouseRouter);
 // app.use('/live-stream', liveRouter);
 
 // Start HTTP server
