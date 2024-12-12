@@ -30,6 +30,9 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
+// Export the pool to be used in other modules
+module.exports.pool = pool;
+
 // Import routes
 const testRouter = require('./routes/test');
 // const liveRouter = require('./routes/live');
@@ -41,5 +44,3 @@ app.use('/', testRouter);
 https.createServer(app).listen(port, () => {
     console.log(`HTTPS Server running on port ${port}`);
 });
-
-module.exports.pool = pool;
