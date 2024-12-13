@@ -25,8 +25,8 @@ router.get('/', (req, res) => {
         }
 
         const query = 'SELECT * FROM rfid_logs ORDER BY RLID DESC;';
+        const rfidQuery = `WITH RECURSIVE ParentTree AS (     SELECT RLID, RFID, PLIS, TSTMP, LOC, PARENT     FROM rfid_logs     WHERE RLID = ?     UNION ALL     SELECT r.RLID, r.RFID, r.PLIS, r.TSTMP, r.LOC, r.PARENT     FROM rfid_logs r     JOIN ParentTree pt ON r.RLID = pt.PARENT ) SELECT * FROM ParentTree;`;
         connection.query(query, (err, result) => {
-            connection.release(); // Always release the connection
             if (err) {
                 return res.status(500).json({ message: 'Failed to retrieve data', error: err });
             }
@@ -42,7 +42,14 @@ router.get('/', (req, res) => {
 
                 if (prodID === pid) {
                     if (id >= start && id <= end) {
-                        return res.status(200).json({ message: 'Data successfully retrieved', res1 });
+                        connection.query(rfidQuery, [res1["PARENT"]], (err, results) => {
+                            connection.release(); // Always release the connection
+                            if (err) {
+                                return res.status(500).json({ message: 'Failed to retrieve data', error: err });
+                            }
+
+                            return res.status(200).json({ message: 'Data successfully retrieved', results });
+                        });
                     }
                 }
             }
