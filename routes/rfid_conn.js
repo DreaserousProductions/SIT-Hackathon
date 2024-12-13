@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { rfid, plis, loc, term } = req.body; // Assuming you're sending data in the body
-    console.log(req.body);
+    console.log(req.body["plis"]);
 
     pool.getConnection((err, connection) => {
         if (err) {
