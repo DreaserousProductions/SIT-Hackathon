@@ -75,7 +75,7 @@ router.post('/', (req, res) => {
 
                 const { prodID: iProdID, start: iStart, end: iEnd } = plisReader(result[0]["PLIS"]);
                 const { prodID, start, end } = plisReader(jPlis);
-                if (prodID === iProdID && (start === iStart || end <= iEnd)) {
+                if (prodID === iProdID && (start === iStart && end <= iEnd)) {
                     if (end !== iEnd) {
                         const writePlis = plisWriter(prodID, end + 1, iEnd);
                         const writeCnt = end - iEnd + 1;
