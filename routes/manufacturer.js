@@ -25,8 +25,8 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     const { rfid, plis, dop, doe } = req.body; // Assuming you're sending data in the body
     console.log(rfid);
-    console.log(JSON.parse(rfid));
-    console.log(JSON.parse(plis));
+    console.log(JSON.parse(rfid.replaceAll(`'`, `"`)));
+    console.log(JSON.parse(plis.replaceAll(`'`, `"`)));
     console.log(dop);
     console.log(doe);
 
