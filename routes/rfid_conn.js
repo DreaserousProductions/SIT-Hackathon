@@ -4,8 +4,12 @@ const { pool } = require('../server');
 const router = express.Router();
 
 function plisReader(plis) {
-    console.log(plis["start"]);
-    console.log(plis["end"]);
+    const prodID = Number(plis["start"].split("_")[0]);
+
+    const start = Number(plis["start"].split("_")[1]);
+    const end = Number(plis["end"].split("_")[1]);
+
+    return { prodID, start, end };
 }
 
 router.get('/', (req, res) => {
@@ -64,7 +68,11 @@ router.post('/', (req, res) => {
                 if (err) {
                     return res.status(500).json({ message: 'Failed to insert data', error: err });
                 }
-                plisReader(result[0]["PLIS"]);
+                const { prodID, start, end } = plisReader(result[0]["PLIS"]);
+                console.log(prodID, start, end);
+                console.log(result[0]['CNT']);
+
+                res.status(200).json({ message: "Testing Successful" });
                 // connection.query(newQuery, [rfid, jPlis.replaceAll(`'`, `"`), loc, Number(term)], (err, result) => {
                 //     connection.release();
                 //     if (err) {
