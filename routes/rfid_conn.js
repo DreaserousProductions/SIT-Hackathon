@@ -60,16 +60,12 @@ router.post('/', (req, res) => {
                     const rfidQuery = 'INSERT INTO rfid_logs (RFID, WID, PLIS, TSTMP, LOC, PARENT) VALUES (?, ?, ?, NOW(), ?, ?);';
                     const transferQuery = 'INSERT INTO inventory (WID, PPID, PLIS, CNT) VALUES (?, ?, ?, ?);';
 
-                    const prfidQuery = "SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;"
+                    // const prfidQuery = "SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;"
                     let qrfid = "";
                     if (!prfid) {
-                        await connection.query(prfidQuery, (err, reses) => {
-                            if (err) {
-                                return res.status(500).json({ message: 'Failed to insert data', error: err });
-                            }
+                        const [reses] = await connection.query("SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;");
+                        qrfid = reses[0]?.RLID || ""; // Handle case when no RLID exists
 
-                            qrfid = reses[0]["RLID"];
-                        });
                     } else {
                         qrfid = prfid;
                     }
