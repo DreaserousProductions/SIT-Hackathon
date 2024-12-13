@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const { rfid, plis, loc, term } = req.body; // Assuming you're sending data in the body
+    const { rfid, wid, plis, loc } = req.body; // Assuming you're sending data in the body
     const jPlis = JSON.stringify(plis);
 
     pool.getConnection((err, connection) => {
@@ -31,9 +31,9 @@ router.post('/', (req, res) => {
             return res.status(500).json({ message: 'Database connection failed', error: err });
         }
 
-        const parentQuery = 'SELECT RLID FROM rfid_logs WHERE RFID = ? ORDER BY RLID DESC;'
-        const prevQuery = 'INSERT INTO rfid_logs (RFID, PLIS, TSTMP, LOC, PARENT, TERM) VALUES (?, ?, NOW(), ?, ?, ?);';
-        const newQuery = 'INSERT INTO rfid_logs (RFID, PLIS, TSTMP, LOC, TERM) VALUES (?, ?, NOW(), ?, ?);';
+        // const parentQuery = 'SELECT RLID FROM rfid_logs WHERE RFID = ? ORDER BY RLID DESC;'
+        // const prevQuery = 'INSERT INTO rfid_logs (RFID, PLIS, TSTMP, LOC, PARENT, TERM) VALUES (?, ?, NOW(), ?, ?, ?);';
+        // const newQuery = 'INSERT INTO rfid_logs (RFID, PLIS, TSTMP, LOC, TERM) VALUES (?, ?, NOW(), ?, ?);';
         if (Number(term) === 1 || Number(term) === 2) {
             connection.query(parentQuery, [rfid], (err, result) => {
                 if (err) {
@@ -54,13 +54,19 @@ router.post('/', (req, res) => {
                 }
             });
         } else {
-            connection.query(newQuery, [rfid, jPlis.replaceAll(`'`, `"`), loc, Number(term)], (err, result) => {
-                connection.release();
+            const query = 'SELECT PPID, PLIS, CNT FROM inventory WHERE WID = 1000;';
+            connection.query(query, (err, result) => {
                 if (err) {
                     return res.status(500).json({ message: 'Failed to insert data', error: err });
                 }
+                connection.query(newQuery, [rfid, jPlis.replaceAll(`'`, `"`), loc, Number(term)], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        return res.status(500).json({ message: 'Failed to insert data', error: err });
+                    }
 
-                res.status(200).json({ message: 'Products successfully dispatched from manufacturer', result });
+                    res.status(200).json({ message: 'Products successfully dispatched from manufacturer', result });
+                });
             });
         }
 
