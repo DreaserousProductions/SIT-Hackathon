@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
             return res.status(500).json({ message: 'Database connection failed', error: err });
         }
 
-        const query = 'INSERT INTO ware_conditions (WID, TEMP, HUMIDITY) VALUES (?, ?, ?);';
+        const query = 'INSERT INTO ware_conditions (WID, TEMP, HUMIDITY, TSTMP) VALUES (?, ?, ?, NOW());';
         connection.query(query, [Number(wid), Number(temp), Number(humidity)], (err, result) => {
             connection.release(); // Always release the connection
 
