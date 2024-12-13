@@ -266,7 +266,7 @@ app.get('/dashboard', (req, res) => {
         </div>
         <div class="api details">
             <img src="./details.png">
-            Deatils
+            Details
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
