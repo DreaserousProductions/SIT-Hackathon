@@ -86,6 +86,8 @@ router.post('/', (req, res) => {
                             if (err) {
                                 return res.status(500).json({ message: 'Failed to insert data', error: err });
                             }
+
+                            res.status(200).json({ message: "Testing Successful" });
                         });
                     } else {
                         const deleteQuery = 'DELETE FROM inventory WHERE EID = ?;';
@@ -94,12 +96,13 @@ router.post('/', (req, res) => {
                             if (err) {
                                 return res.status(500).json({ message: 'Failed to insert data', error: err });
                             }
+
+                            res.status(200).json({ message: "Testing Successful" });
                         });
                     }
-                }
-
-                res.status(200).json({ message: "Testing Successful" });
-                // connection.query(newQuery, [rfid, jPlis.replaceAll(`'`, `"`), loc, Number(term)], (err, result) => {
+                } else {
+                    res.status(200).json({ message: "Product Range Out of Index" });
+                }                // connection.query(newQuery, [rfid, jPlis.replaceAll(`'`, `"`), loc, Number(term)], (err, result) => {
                 //     connection.release();
                 //     if (err) {
                 //         return res.status(500).json({ message: 'Failed to insert data', error: err });
