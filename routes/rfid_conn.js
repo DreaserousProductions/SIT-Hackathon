@@ -4,8 +4,6 @@ const { pool } = require('../server');
 const router = express.Router();
 
 function plisReader(plis) {
-    console.log(plis);
-    console.log(plis["start"]);
     const prodID = Number(plis["start"].split("_")[0]);
 
     const start = Number(plis["start"].split("_")[1]);
@@ -40,7 +38,6 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     const { rfid, wid, plis, loc } = req.body; // Assuming you're sending data in the body
     const jPlis = JSON.parse(plis.replaceAll(`'`, `"`));
-    console.log(jPlis);
 
     pool.getConnection((err, connection) => {
         if (err) {
@@ -78,13 +75,13 @@ router.post('/', (req, res) => {
 
                 const { prodID: iProdID, start: iStart, end: iEnd } = plisReader(result[0]["PLIS"]);
                 const { prodID, start, end } = plisReader(jPlis);
-                if (start === iStart || end <= iEnd) {
+                if (prodID === iProdID && (start === iStart || end <= iEnd)) {
                     if (end !== iEnd) {
                         const writePlis = plisWriter(prodID, end + 1, iEnd);
                         const writeCnt = end - iEnd + 1;
 
                         const updateQuery = 'UPDATE inventory PLIS = ?, CNT = ?;';
-                        connection.query(updateQuery, [JSON.stringify(writePlis), writeCnt], (err, res) => {
+                        connection.query(updateQuery, [JSON.stringify(writePlis), writeCnt], (err, reses) => {
                             connection.close();
                             if (err) {
                                 return res.status(500).json({ message: 'Failed to insert data', error: err });
@@ -92,7 +89,7 @@ router.post('/', (req, res) => {
                         });
                     } else {
                         const deleteQuery = 'DELETE FROM inventory WHERE EID = ?;';
-                        connection.query(deleteQuery, [result[0]["EID"]], (err, res) => {
+                        connection.query(deleteQuery, [result[0]["EID"]], (err, reses) => {
                             connection.close();
                             if (err) {
                                 return res.status(500).json({ message: 'Failed to insert data', error: err });
