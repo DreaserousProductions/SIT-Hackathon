@@ -125,6 +125,11 @@ app.get('/dashboard', (req, res) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Dashboard</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
         #logs { max-height: 80vh; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
         .log { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; }
