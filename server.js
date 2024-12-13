@@ -266,10 +266,7 @@ app.get('/dashboard', (req, res) => {
         const socket = io();
 
         const appendLog = (log) => {
-            const temp = String(log);
-            console.log(temp, temp.includes("warehouse"));
-            console.log(log.includes("warehouse"));
-            if(log.toString().includes("rfid")) {
+            if(log.endpoint.includes("rfid")) {
                 const elem = document.querySelector(".rfid");
                 const border1 = document.querySelector("#rfid-ver");
                 const border2 = document.querySelector("#rfid-hor");
@@ -283,7 +280,7 @@ app.get('/dashboard', (req, res) => {
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
                 }, 1000);
-            } else if(log.toString().includes("warehouse")) {
+            } else if(log.endpoint.includes("warehouse")) {
                 const elem = document.querySelector(".warehouse");
                 const border1 = document.querySelector("#ware-ver");
                 const border2 = document.querySelector("#ware-hor");
@@ -297,7 +294,7 @@ app.get('/dashboard', (req, res) => {
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
                 }, 10000);
-            } else if(log.toString().includes("details")) {
+            } else if(log.endpoint.includes("details")) {
                 const elem = document.querySelector(".details");
                 const border1 = document.querySelector("#det-ver");
                 const border2 = document.querySelector("#det-hor");
@@ -311,7 +308,7 @@ app.get('/dashboard', (req, res) => {
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
                 }, 1000);
-            } else if(log.toString().includes("manufacturer")) {
+            } else if(log.endpoint.includes("manufacturer")) {
                 const elem = document.querySelector(".manufacturer");
                 const border1 = document.querySelector("#manu-ver");
                 const border2 = document.querySelector("#manu-hor");
