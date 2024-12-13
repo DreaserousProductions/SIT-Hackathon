@@ -84,13 +84,6 @@ const pool = mysql.createPool({
 // Export the pool to be used in other modules
 module.exports.pool = pool;
 
-// HTTP and WebSocket Servers
-const server = http.createServer(app);
-const io = new Server(server);
-
-// Store API logs in memory
-const logs = [];
-
 // Middleware to log API usage
 app.use((req, res, next) => {
     const log = {
@@ -103,6 +96,13 @@ app.use((req, res, next) => {
     io.emit('api_access', log); // Emit log to WebSocket clients
     next();
 });
+
+// HTTP and WebSocket Servers
+const server = http.createServer(app);
+const io = new Server(server);
+
+// Store API logs in memory
+const logs = [];
 
 // Import Routes
 const warehouseRouter = require('./routes/warehouse');
