@@ -281,12 +281,52 @@ app.get('/dashboard', (req, res) => {
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
                 }, 1000);
+            } else if(log.includes("warehouse")) {
+                const elem = document.querySelector(".warehouese");
+                const border1 = document.querySelector("#ware-ver");
+                const border2 = document.querySelector("#ware-hor");
+
+                elem.style.animation = "animation: pulse infinite 1s alternate";
+                border1.style.border = "2px dashed lightgreen";
+                border2.style.border = "2px dashed lightgreen";
+
+                setTimeout(() => {
+                    elem.style.animation = "animation: none";
+                    border1.style.border = "2px dashed black";
+                    border2.style.border = "2px dashed black";
+                }, 1000);
+            } else if(log.includes("details")) {
+                const elem = document.querySelector(".details");
+                const border1 = document.querySelector("#det-ver");
+                const border2 = document.querySelector("#det-hor");
+
+                elem.style.animation = "animation: pulse infinite 1s alternate";
+                border1.style.border = "2px dashed lightgreen";
+                border2.style.border = "2px dashed lightgreen";
+
+                setTimeout(() => {
+                    elem.style.animation = "animation: none";
+                    border1.style.border = "2px dashed black";
+                    border2.style.border = "2px dashed black";
+                }, 1000);
+            } else if(log.includes("manufacturer")) {
+                const elem = document.querySelector(".manufacturer");
+                const border1 = document.querySelector("#manu-ver");
+                const border2 = document.querySelector("#manu-hor");
+
+                elem.style.animation = "animation: pulse infinite 1s alternate";
+                border1.style.border = "2px dashed lightgreen";
+                border2.style.border = "2px dashed lightgreen";
+
+                setTimeout(() => {
+                    elem.style.animation = "animation: none";
+                    border1.style.border = "2px dashed black";
+                    border2.style.border = "2px dashed black";
+                }, 1000);
             }
-            const logsDiv = document.getElementById('logs');
-            const logDiv = document.createElement('div');
-            logDiv.className = 'log';
-            logDiv.innerText = \`[\${log.timestamp}] \${log.method} \${log.endpoint} - Body: \${JSON.stringify(log.body)}\`;
-            logsDiv.appendChild(logDiv);
+
+            const logsDiv = document.querySelector('.top');
+            logsDiv.innerText = \`[\${log.timestamp}] \${log.method} \${log.endpoint} - Body: \${JSON.stringify(log.body)}\`;
         };
 
         // Handle real-time logs
