@@ -38,7 +38,6 @@ router.post('/', (req, res) => {
     const { ppid, date, count } = req.body;
     const dateType = new Date(date)
     const doe = new Date(dateType.getTime() + count * 24 * 60 * 60 * 1000);
-    console.log(String(doe));
 
     pool.getConnection((err, connection) => {
         if (err) {
@@ -53,7 +52,8 @@ router.post('/', (req, res) => {
             }
 
             if (result.length !== 0) {
-                connection.query(manQuery, [`{"start" : "${result[0]["ppid"]}_${result[0]["cur_pid"]}", "start" : "${result[0]["ppid"]}_${result[0]["cur_pid"] + count}"}`, dateType, formatDateToMySQL(doe)], async (err, results) => {
+                console.log(result[0]["PPID"]);
+                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"] + count}"}`, dateType, formatDateToMySQL(doe)], async (err, results) => {
                     connection.release();
                     if (err) {
                         return res.status(500).json({ message: 'Failed to insert data', error: err });
