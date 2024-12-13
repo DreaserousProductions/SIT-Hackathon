@@ -35,7 +35,7 @@ module.exports.pool = pool;
 // Import routes
 const warehouseRouter = require('./routes/warehouse');
 const manfacturerRouter = require('./routes/manufacturer');
-const detailsRouter = require('./routes/product_deatils');
+const detailsRouter = require('./routes/product_details');
 
 app.use('/warehouse', warehouseRouter);
 app.use('/manufacturer', manfacturerRouter);
