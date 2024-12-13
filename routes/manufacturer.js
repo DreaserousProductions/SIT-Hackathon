@@ -53,7 +53,7 @@ router.post('/', (req, res) => {
             }
 
             if (result.length !== 0) {
-                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "end" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + count}"}`, dateType, formatDateToMySQL(doe)], (err, results) => {
+                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "end" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + Number(count)}"}`, dateType, formatDateToMySQL(doe)], (err, results) => {
                     if (err) {
                         return res.status(500).json({ message: 'Failed to insert data', error: err });
                     }
