@@ -138,7 +138,7 @@ app.get('/dashboard', (req, res) => {
         #main { width: 100%; height:85vh; border: 1px solid black; display: flex; flex-direction:column; align-items:center; justify-content:center;}
         #main .man-img {max-width:8%;transition: box-shadow 1s; animation: pulse infinite 1s alternate;}
         .top {width: 650px; height: 40px; margin-bottom:20px;background: rgba(100, 100, 100, 0.25);border-radius: 5px; border: 1px dashed gray;font-size:12px;overflow:hidden;display: flex; align-items:center; justify-content:center;font-family: monospace;}
-        .bottom {margin-top:10px;}
+        .bottom {margin-top:10px;font-family:monospace; font-size:15px;}
         .api {
             height:100px;
             width: 100px;
