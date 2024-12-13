@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
             return res.status(500).json({ message: 'Database connection failed', error: err });
         }
 
-        const query = 'SELECT * FROM rfid_logs;';
+        const query = 'SELECT * FROM manufactured_products;';
         connection.query(query, (err, result) => {
             connection.release(); // Always release the connection
 
@@ -80,7 +80,7 @@ router.post('/', (req, res) => {
                         const writePlis = plisWriter(prodID, end + 1, iEnd);
                         const writeCnt = iEnd - end;
 
-                        const updateQuery = 'UPDATE inventory PLIS = ?, CNT = ?;';
+                        const updateQuery = 'UPDATE inventory SET PLIS = ?, CNT = ?;';
                         connection.query(updateQuery, [writePlis, writeCnt], (err, reses) => {
                             connection.close();
                             if (err) {
