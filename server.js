@@ -34,10 +34,10 @@ module.exports.pool = pool;
 
 // Import routes
 const warehouseRouter = require('./routes/warehouse');
-// const liveRouter = require('./routes/live');
+const manfacturerRouter = require('./routes/manufacturer');
 
 app.use('/warehouse', warehouseRouter);
-// app.use('/live-stream', liveRouter);
+app.use('/manufacturer', manfacturerRouter);
 
 // Start HTTP server
 app.listen(port, () => {
