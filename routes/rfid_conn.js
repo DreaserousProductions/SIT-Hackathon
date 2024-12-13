@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
                 }
 
                 if (result.length != 0) {
-                    connection.query(prevQuery, [rfid, plis.replaceAll(`'`, `"`), loc, result[0]["RLID"], term], (err, result) => {
+                    connection.query(prevQuery, [rfid, JSON.stringgify(plis.replaceAll(`'`, `"`)), loc, result[0]["RLID"], term], (err, result) => {
                         connection.release();
                         if (err) {
                             return res.status(500).json({ message: 'Failed to insert data', error: err });
