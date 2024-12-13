@@ -34,13 +34,13 @@ router.post('/', (req, res) => {
 
         const query = 'SELECT * FROM products WHERE ppid = ?;';
         const manQuery = 'INSERT INTO manufactuered_products (PLIS, DOP, DOE) VALUES (?, ?, ?);';
-        connection.query(query, [ppid, date, date + count], async (err, result) => {
+        connection.query(query, [ppid], async (err, result) => {
             if (err) {
                 return res.status(500).json({ message: 'Failed to insert data', error: err });
             }
 
             if (result.length !== 0) {
-                connection.query(manQuery, [ppid], async (err, results) => { });
+                // connection.query(manQuery, [ppid], async (err, results) => { });
                 res.status(200).json({ message: 'Data inserted successfully', result });
             } else {
                 return res.status(404).json({ message: 'Product ID not found' });
