@@ -146,8 +146,13 @@ app.get('/dashboard', (req, res) => {
             position: absolute;
 
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: 700;
 
             background: rgba(100, 100, 100, 0.25);
             border-radius: 5px;
@@ -249,15 +254,19 @@ app.get('/dashboard', (req, res) => {
         <div class="bottom">Server</div>
         <div class="api warehouse">
             <img src="./warehouse.png">
+            Warehouse
         </div>
         <div class="api manufacturer">
             <img src="./factory.png">
+            Manufacturer
         </div>
         <div class="api rfid">
             <img src="./rfid.png">
+            RFID API
         </div>
         <div class="api details">
             <img src="./details.png">
+            Deatils
         </div>
     </div>
     <div id="logs"></div>
