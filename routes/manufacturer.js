@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
                 return res.status(500).json({ message: 'Failed to insert data', error: err });
             }
 
-            console.log(result);
+            console.log(result[0]["PPID"]);
 
             res.status(200).json({ message: 'Data inserted successfully', result });
             // try {
