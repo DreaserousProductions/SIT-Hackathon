@@ -35,6 +35,31 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/collect', (req, res) => {
+    const { wid, ppid } = req.query;
+
+    if (wid && ppid) {
+        pool.getConnection((err, connection) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database connection failed', error: err });
+            }
+
+            const query = 'UPDATE inventory SET COLLECTED = 1 WHERE WID = ? AND PPID = ?;';
+            connection.query(query, (err, result) => {
+                connection.release(); // Always release the connection
+
+                if (err) {
+                    return res.status(500).json({ message: 'Failed to retrieve data', error: err });
+                }
+
+                res.status(200).json({ message: 'Product successfully collected', result });
+            });
+        });
+    } else {
+        res.status(404).json({ message: 'No such order to be collected', result });
+    }
+});
+
 router.post('/', (req, res) => {
     const { rfid, fwid, twid, plis, loc, prfid } = req.body; // Assuming you're sending data in the body
     console.log(req.body);
@@ -58,7 +83,7 @@ router.post('/', (req, res) => {
                     const { prodID: iProdID, start: iStart, end: iEnd } = plisReader(result[0]["PLIS"]);
 
                     const rfidQuery = 'INSERT INTO rfid_logs (RFID, WID, PLIS, TSTMP, LOC, PARENT) VALUES (?, ?, ?, NOW(), ?, ?);';
-                    const transferQuery = 'INSERT INTO inventory (WID, PPID, PLIS, CNT) VALUES (?, ?, ?, ?);';
+                    const transferQuery = 'INSERT INTO inventory (WID, PPID, PLIS, CNT, COLLECTED) VALUES (?, ?, ?, ?, 0);';
 
                     const prfidQuery = "SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;"
                     if (!prfid) {
