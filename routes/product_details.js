@@ -35,12 +35,12 @@ router.get('/', (req, res) => {
             const pid = Number(prodNid[0]);
             const id = Number(prodNid[1]);
 
-            result.forEach(res => {
-                const { prodID, start, end } = plisReader(res["PLIS"])
+            result.forEach(res1 => {
+                const { prodID, start, end } = plisReader(res1["PLIS"])
 
                 if (prodID === pid) {
                     if (id >= start && id <= end) { }
-                    return res.status(200).json({ message: 'Data successfully retrieved', res });
+                    return res.status(200).json({ message: 'Data successfully retrieved', res1 });
                 }
             });
         });
