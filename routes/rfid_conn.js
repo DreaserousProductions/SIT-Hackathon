@@ -46,16 +46,16 @@ router.post('/', (req, res) => {
             return res.status(500).json({ message: 'Database connection failed', error: err });
         }
 
+        const { prodID, start, end } = plisReader(jPlis);
         if (Number(fwid) > 1000 && Number(fwid) < 9000) {
-            const query = 'SELECT EID, PPID, PLIS, CNT FROM inventory WHERE WID = ?;';
-            connection.query(query, [fwid], async (err, result) => {
+            const query = 'SELECT EID, PPID, PLIS, CNT FROM inventory WHERE WID = ? AND PPID = ?;';
+            connection.query(query, [fwid, prodID], async (err, result) => {
                 if (err) {
                     return res.status(500).json({ message: 'Failed to insert data', error: err });
                 }
 
                 if (result.length !== 0) {
                     const { prodID: iProdID, start: iStart, end: iEnd } = plisReader(result[0]["PLIS"]);
-                    const { prodID, start, end } = plisReader(jPlis);
 
                     const rfidQuery = 'INSERT INTO rfid_logs (RFID, WID, PLIS, TSTMP, LOC, PARENT) VALUES (?, ?, ?, NOW(), ?, ?);';
                     const transferQuery = 'INSERT INTO inventory (WID, PPID, PLIS, CNT) VALUES (?, ?, ?, ?);';
@@ -129,8 +129,8 @@ router.post('/', (req, res) => {
                 }
             });
         } else {
-            const query = 'SELECT EID, PPID, PLIS, CNT FROM inventory WHERE WID = 1000;';
-            connection.query(query, (err, result) => {
+            const query = 'SELECT EID, PPID, PLIS, CNT FROM inventory WHERE WID = 1000 AND PPID = ?;';
+            connection.query(query, [prodID], (err, result) => {
                 if (err) {
                     return res.status(500).json({ message: 'Failed to insert data', error: err });
                 }
