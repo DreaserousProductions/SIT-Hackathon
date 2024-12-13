@@ -37,6 +37,8 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { rfid, fwid, twid, plis, loc, prfid } = req.body; // Assuming you're sending data in the body
+    console.log(req.body);
+    console.log(plis);
     const jPlis = JSON.parse(plis.replaceAll(`'`, `"`));
 
     pool.getConnection((err, connection) => {
