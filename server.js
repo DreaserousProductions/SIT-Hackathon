@@ -244,8 +244,7 @@ app.get('/dashboard', (req, res) => {
         <div class="line" id="manu-hor"></div>
         <div class="line" id="det-ver"></div>
         <div class="line" id="det-hor"></div>
-        <div class="top">
-        [2024-12-13T17:37:08.401Z] GET /rfid - Body: {}</div>
+        <div class="top"></div>
         <img class="man-img" src="./server.png">
         <div class="bottom">Server</div>
         <div class="api warehouse">
@@ -267,6 +266,7 @@ app.get('/dashboard', (req, res) => {
         const socket = io();
 
         const appendLog = (log) => {
+            console.log(log.toString().includes("warehouse"));
             if(log.toString().includes("rfid")) {
                 const elem = document.querySelector(".rfid");
                 const border1 = document.querySelector("#rfid-ver");
