@@ -23,15 +23,15 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const { wid, temp, humidity } = req.body; // Assuming you're sending data in the body
+    const { rfid, plis, dop, doe } = req.body; // Assuming you're sending data in the body
 
     pool.getConnection((err, connection) => {
         if (err) {
             return res.status(500).json({ message: 'Database connection failed', error: err });
         }
 
-        const query = 'INSERT INTO ware_conditions (WID, TEMP, HUMIDITY, TSTMP) VALUES (?, ?, ?, NOW());';
-        connection.query(query, [Number(wid), Number(temp), Number(humidity)], (err, result) => {
+        const query = 'INSERT INTO manufactured_products (RFID, PLIS, DOP, DOE) VALUES (?, ?, ?, ?);';
+        connection.query(query, [JSON.parse(rfid), JSON.parse(plis), dop, doe], (err, result) => {
             connection.release(); // Always release the connection
 
             if (err) {
