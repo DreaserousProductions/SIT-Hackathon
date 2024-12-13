@@ -266,6 +266,7 @@ app.get('/dashboard', (req, res) => {
         const socket = io();
 
         const appendLog = (log) => {
+            console.log(log.toString());
             console.log(log.toString().includes("warehouse"));
             if(log.toString().includes("rfid")) {
                 const elem = document.querySelector(".rfid");
