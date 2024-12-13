@@ -37,8 +37,6 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { rfid, fwid, twid, plis, loc, prfid } = req.body; // Assuming you're sending data in the body
-    console.log(req.body);
-    console.log(plis);
     const jPlis = JSON.parse(plis.replaceAll(`'`, `"`));
 
     pool.getConnection((err, connection) => {
@@ -47,7 +45,9 @@ router.post('/', (req, res) => {
         }
 
         const { prodID, start, end } = plisReader(jPlis);
+        console.log(1);
         if (Number(fwid) > 1000 && Number(fwid) < 9000) {
+            console.log(1);
             const query = 'SELECT EID, PPID, PLIS, CNT FROM inventory WHERE WID = ? AND PPID = ?;';
             connection.query(query, [fwid, prodID], async (err, result) => {
                 if (err) {
@@ -62,7 +62,6 @@ router.post('/', (req, res) => {
 
                     // const prfidQuery = "SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;"
                     let qrfid = "";
-                    console.log(1);
                     if (!prfid) {
                         const [reses] = await connection.query("SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;");
                         console.log(2);
