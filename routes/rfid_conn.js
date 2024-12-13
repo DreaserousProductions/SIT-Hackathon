@@ -74,7 +74,7 @@ router.post('/', (req, res) => {
                 }
 
                 const { prodID: iProdID, start: iStart, end: iEnd } = plisReader(result[0]["PLIS"]);
-                const { prodID, start, end } = plisReader(plis);
+                const { prodID, start, end } = plisReader(jPlis);
                 if (start === iStart || end <= iEnd) {
                     if (end !== iEnd) {
                         const writePlis = plisWriter(prodID, end + 1, iEnd);
@@ -89,7 +89,7 @@ router.post('/', (req, res) => {
                         });
                     } else {
                         const deleteQuery = 'DELETE FROM inventory WHERE EID = ?;';
-                        connection.query(updateQuery, [result[0]["EID"]], (err, res) => {
+                        connection.query(deleteQuery, [result[0]["EID"]], (err, res) => {
                             connection.close();
                             if (err) {
                                 return res.status(500).json({ message: 'Failed to insert data', error: err });
