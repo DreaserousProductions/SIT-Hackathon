@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
             return res.status(500).json({ message: 'Database connection failed', error: err });
         }
 
-        const query = 'SELECT * FROM manufactured_products;';
+        const query = 'SELECT * FROM rfid_logs;';
         connection.query(query, (err, result) => {
             connection.release(); // Always release the connection
 
