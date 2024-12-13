@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { ppid, date, count } = req.body;
-    console.log(date);
+    console.log(Date(date));
 
     pool.getConnection((err, connection) => {
         if (err) {
