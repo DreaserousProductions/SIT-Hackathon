@@ -77,7 +77,7 @@ router.post('/', (req, res) => {
                 const { prodID, start, end } = plisReader(jPlis);
                 if (prodID === iProdID && (start === iStart && end <= iEnd)) {
                     if (end !== iEnd) {
-                        const writePlis = String(plisWriter(prodID, end + 1, iEnd));
+                        const writePlis = JSON.stringify(plisWriter(prodID, end + 1, iEnd));
                         const writeCnt = iEnd - end;
 
                         const updateQuery = 'UPDATE inventory PLIS = ?, CNT = ?;';
