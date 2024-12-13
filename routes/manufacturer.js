@@ -54,13 +54,13 @@ router.post('/', (req, res) => {
 
             if (result.length !== 0) {
                 const doe = new Date(dateType.getTime() + result[0]["EXP_TIME"] * 24 * 60 * 60 * 1000);
-                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "end" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + Number(count) - 2}"}`, dateType, formatDateToMySQL(doe)], (err, results) => {
+                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "end" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + Number(count) - 1}"}`, dateType, formatDateToMySQL(doe)], (err, results) => {
                     if (err) {
                         return res.status(500).json({ message: 'Failed to insert data', error: err });
                     }
 
                     connection.query(updateQuery, [Number(result[0]["CUR_PID"]) + Number(count), ppid], (err, reses) => {
-                        connection.query(invQuery, [1000, ppid, `{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "end" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + Number(count) - 2}"}`, Number(count)], (err, reses1) => {
+                        connection.query(invQuery, [1000, ppid, `{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "end" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + Number(count) - 1}"}`, Number(count)], (err, reses1) => {
                             connection.release();
                             if (err) {
                                 return res.status(500).json({ message: 'Failed to insert data', error: err });
