@@ -37,7 +37,6 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     const { ppid, date, count } = req.body;
     const dateType = new Date(date)
-    const doe = new Date(dateType.getTime() + count * 24 * 60 * 60 * 1000);
 
     pool.getConnection((err, connection) => {
         if (err) {
@@ -53,12 +52,13 @@ router.post('/', (req, res) => {
             }
 
             if (result.length !== 0) {
-                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "end" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + Number(count)}"}`, dateType, formatDateToMySQL(doe)], (err, results) => {
+                const doe = new Date(dateType.getTime() + result[0]["EXP_TIME"] * 24 * 60 * 60 * 1000);
+                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "end" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + Number(count) - 1}"}`, dateType, formatDateToMySQL(doe)], (err, results) => {
                     if (err) {
                         return res.status(500).json({ message: 'Failed to insert data', error: err });
                     }
 
-                    connection.query(updateQuery, [Number(result[0]["CUR_PID"]) + Number(count), ppid], (err, reses) => {
+                    connection.query(updateQuery, [Number(result[0]["CUR_PID"]) + Number(count) - 1, ppid], (err, reses) => {
                         connection.release();
                         if (err) {
                             return res.status(500).json({ message: 'Failed to insert data', error: err });
