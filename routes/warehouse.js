@@ -5,22 +5,26 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     const { wid } = req.query;
-    pool.getConnection((err, connection) => {
-        if (err) {
-            return res.status(500).json({ message: 'Database connection failed', error: err });
-        }
-
-        const query = 'SELECT * FROM ware_conditions WHERE WID = ? ORDER BY CID DESC LIMIT 1;';
-        connection.query(query, [wid], (err, result) => {
-            connection.release(); // Always release the connection
-
+    if (wid) {
+        pool.getConnection((err, connection) => {
             if (err) {
-                return res.status(500).json({ message: 'Failed to retrieve data', error: err });
+                return res.status(500).json({ message: 'Database connection failed', error: err });
             }
 
-            res.status(200).json({ message: 'Data successfully retrieved', result });
+            const query = 'SELECT * FROM ware_conditions WHERE WID = ? ORDER BY CID DESC LIMIT 1;';
+            connection.query(query, [wid], (err, result) => {
+                connection.release(); // Always release the connection
+
+                if (err) {
+                    return res.status(500).json({ message: 'Failed to retrieve data', error: err });
+                }
+
+                res.status(200).json({ message: 'Data successfully retrieved', result });
+            });
         });
-    });
+    } else {
+        return res.status(500).json({ message: 'No warehouse was specified.' });
+    }
 });
 
 router.post('/', (req, res) => {
