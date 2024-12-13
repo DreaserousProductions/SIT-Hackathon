@@ -25,6 +25,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { ppid, date, count } = req.body;
+    console.log(date);
     const dateType = new Date(date)
     const doe = new Date(dateType.getTime() + count * 24 * 60 * 60 * 1000);
     console.log(doe);
