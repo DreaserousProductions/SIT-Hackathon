@@ -139,6 +139,8 @@ router.post('/', (req, res) => {
                     const { prodID: iProdID, start: iStart, end: iEnd } = plisReader(result[0]["PLIS"]);
                     const { prodID, start, end } = plisReader(jPlis);
 
+                    console.log(start, end, iStart, iEnd);
+
                     const rfidQuery = 'INSERT INTO rfid_logs (RFID, WID, PLIS, TSTMP, LOC) VALUES (?, ?, ?, NOW(), ?);';
                     const transferQuery = 'INSERT INTO inventory (WID, PPID, PLIS, CNT) VALUES (?, ?, ?, ?);';
 
