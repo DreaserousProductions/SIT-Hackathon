@@ -45,7 +45,6 @@ router.post('/', (req, res) => {
         }
 
         const { prodID, start, end } = plisReader(jPlis);
-        console.log(1);
         if (Number(fwid) > 1000 && Number(fwid) < 9000) {
             console.log(1);
             const query = 'SELECT EID, PPID, PLIS, CNT FROM inventory WHERE WID = ? AND PPID = ?;';
@@ -64,14 +63,11 @@ router.post('/', (req, res) => {
                     let qrfid = "";
                     if (!prfid) {
                         const [reses] = await connection.query("SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;");
-                        console.log(2);
                         qrfid = reses[0]?.RLID || ""; // Handle case when no RLID exists
 
                     } else {
                         qrfid = prfid;
                     }
-
-                    console.log(qrfid);
 
                     if (prodID === iProdID && (start === iStart && end <= iEnd)) {
                         const rWritePlis = plisWriter(prodID, start, end);
