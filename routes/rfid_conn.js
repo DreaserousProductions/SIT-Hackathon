@@ -13,7 +13,7 @@ function plisReader(plis) {
 }
 
 function plisWriter(prodID, start, end) {
-    return { "start": `${prodID}_${start}`, "end": `${prodID}_${end}` };
+    return JSON.stringify({ "start": `${prodID}_${start}`, "end": `${prodID}_${end}` });
 }
 
 router.get('/', (req, res) => {
