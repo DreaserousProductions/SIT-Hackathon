@@ -282,7 +282,7 @@ app.get('/dashboard', (req, res) => {
                     border2.style.border = "2px dashed black";
                 }, 1000);
             } else if(log.includes("warehouse")) {
-                const elem = document.querySelector(".warehouese");
+                const elem = document.querySelector(".warehouse");
                 const border1 = document.querySelector("#ware-ver");
                 const border2 = document.querySelector("#ware-hor");
 
@@ -294,7 +294,7 @@ app.get('/dashboard', (req, res) => {
                     elem.style.animation = "animation: none";
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
-                }, 1000);
+                }, 10000);
             } else if(log.includes("details")) {
                 const elem = document.querySelector(".details");
                 const border1 = document.querySelector("#det-ver");
@@ -330,7 +330,7 @@ app.get('/dashboard', (req, res) => {
         };
 
         // Handle real-time logs
-        socket.on('api_access', (log) => appendLog(log.toString()));
+        socket.on('api_access', (log) => appendLog(log));
 
         // Connect to WebSocket server
         socket.on('connect', () => {
