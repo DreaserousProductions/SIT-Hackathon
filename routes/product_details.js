@@ -35,6 +35,8 @@ router.get('/', (req, res) => {
             const pid = Number(prodNid[0]);
             const id = Number(prodNid[1]);
 
+            console.log(pid, id);
+
             result.forEach(res1 => {
                 const { prodID, start, end } = plisReader(res1["PLIS"])
 
