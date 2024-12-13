@@ -45,7 +45,7 @@ router.post('/', (req, res) => {
         }
 
         const query = 'SELECT * FROM products WHERE ppid = ?;';
-        const manQuery = 'INSERT INTO manufactuered_products (PLIS, DOP, DOE) VALUES (?, ?, ?);';
+        const manQuery = 'INSERT INTO manufactured_products (PLIS, DOP, DOE) VALUES (?, ?, ?);';
         connection.query(query, [ppid], async (err, result) => {
             if (err) {
                 return res.status(500).json({ message: 'Failed to insert data', error: err });
@@ -53,7 +53,7 @@ router.post('/', (req, res) => {
 
             if (result.length !== 0) {
                 console.log(result[0]["PPID"]);
-                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"] + count}"}`, dateType, formatDateToMySQL(doe)], async (err, results) => {
+                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "start" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + count}"}`, dateType, formatDateToMySQL(doe)], async (err, results) => {
                     connection.release();
                     if (err) {
                         return res.status(500).json({ message: 'Failed to insert data', error: err });
