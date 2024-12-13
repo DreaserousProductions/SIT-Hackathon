@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { rfid, plis, loc, term } = req.body; // Assuming you're sending data in the body
-    const jPlis = String(plis);
+    const jPlis = JSON.stringify(plis);
     console.log(plis);
     console.log(jPlis);
 
