@@ -64,12 +64,13 @@ router.post('/', (req, res) => {
             });
         } else {
             const query = 'SELECT PPID, PLIS, CNT FROM inventory WHERE WID = 1000;';
+            const updateQuery = 'UPDATE inventory PLIS = ?, CNT = ?;';
             connection.query(query, (err, result) => {
                 if (err) {
                     return res.status(500).json({ message: 'Failed to insert data', error: err });
                 }
-                const { prodID, start, end } = plisReader(result[0]["PLIS"]);
-                console.log(prodID, start, end);
+                const { iProdID, iStart, iEnd } = plisReader(result[0]["PLIS"]);
+                console.log(iProdID, iStart, iEnd);
                 console.log(result[0]['CNT']);
 
                 res.status(200).json({ message: "Testing Successful" });
