@@ -62,13 +62,17 @@ router.post('/', (req, res) => {
 
                     // const prfidQuery = "SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;"
                     let qrfid = "";
+                    console.log(1);
                     if (!prfid) {
                         const [reses] = await connection.query("SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;");
+                        console.log(2);
                         qrfid = reses[0]?.RLID || ""; // Handle case when no RLID exists
 
                     } else {
                         qrfid = prfid;
                     }
+
+                    console.log(qrfid);
 
                     if (prodID === iProdID && (start === iStart && end <= iEnd)) {
                         const rWritePlis = plisWriter(prodID, start, end);
