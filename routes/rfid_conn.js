@@ -81,7 +81,7 @@ router.post('/', (req, res) => {
                         const writeCnt = iEnd - end + 1;
 
                         const updateQuery = 'UPDATE inventory PLIS = ?, CNT = ?;';
-                        connection.query(updateQuery, [writePlis, writeCnt], (err, reses) => {
+                        connection.query(updateQuery, [JSON.parse(writePlis), writeCnt], (err, reses) => {
                             connection.close();
                             if (err) {
                                 return res.status(500).json({ message: 'Failed to insert data', error: err });
