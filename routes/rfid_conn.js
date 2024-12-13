@@ -3,6 +3,11 @@ const { pool } = require('../server');
 
 const router = express.Router();
 
+function plisReader(plis) {
+    console.log(plis["start"]);
+    console.log(plis["end"]);
+}
+
 router.get('/', (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {
@@ -34,7 +39,7 @@ router.post('/', (req, res) => {
         // const parentQuery = 'SELECT RLID FROM rfid_logs WHERE RFID = ? ORDER BY RLID DESC;'
         // const prevQuery = 'INSERT INTO rfid_logs (RFID, PLIS, TSTMP, LOC, PARENT, TERM) VALUES (?, ?, NOW(), ?, ?, ?);';
         // const newQuery = 'INSERT INTO rfid_logs (RFID, PLIS, TSTMP, LOC, TERM) VALUES (?, ?, NOW(), ?, ?);';
-        if (Number(term) === 1 || Number(term) === 2) {
+        if (Number(wid) > 1000 && Number(wid) < 9000) {
             connection.query(parentQuery, [rfid], (err, result) => {
                 if (err) {
                     return res.status(500).json({ message: 'Failed to insert data', error: err });
@@ -59,14 +64,15 @@ router.post('/', (req, res) => {
                 if (err) {
                     return res.status(500).json({ message: 'Failed to insert data', error: err });
                 }
-                connection.query(newQuery, [rfid, jPlis.replaceAll(`'`, `"`), loc, Number(term)], (err, result) => {
-                    connection.release();
-                    if (err) {
-                        return res.status(500).json({ message: 'Failed to insert data', error: err });
-                    }
+                plisReader(result[0]["PLIS"]);
+                // connection.query(newQuery, [rfid, jPlis.replaceAll(`'`, `"`), loc, Number(term)], (err, result) => {
+                //     connection.release();
+                //     if (err) {
+                //         return res.status(500).json({ message: 'Failed to insert data', error: err });
+                //     }
 
-                    res.status(200).json({ message: 'Products successfully dispatched from manufacturer', result });
-                });
+                //     res.status(200).json({ message: 'Products successfully dispatched from manufacturer', result });
+                // });
             });
         }
 
