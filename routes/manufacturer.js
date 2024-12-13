@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { rfid, plis, dop, doe } = req.body;
-    console.log(rfid, plis);
+    console.log(rfid.replace(`'`, `"`), plis);
 
     pool.getConnection((err, connection) => {
         if (err) {
