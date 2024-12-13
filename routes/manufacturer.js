@@ -58,7 +58,7 @@ router.post('/', (req, res) => {
                         return res.status(500).json({ message: 'Failed to insert data', error: err });
                     }
 
-                    connection.query(updateQuery, [Number(result[0]["CUR_PID"]) + count, ppid], (err, reses) => {
+                    connection.query(updateQuery, [Number(result[0]["CUR_PID"]) + Number(count), ppid], (err, reses) => {
                         connection.release();
                         if (err) {
                             return res.status(500).json({ message: 'Failed to insert data', error: err });
