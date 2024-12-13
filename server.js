@@ -133,7 +133,7 @@ app.get('/dashboard', (req, res) => {
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
         #logs { max-height: 80vh; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
         .log { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; }
-        #main {height: 100vh; width: 100vw; border: 1px solid black;}
+        #main { width: 100%; border: 1px solid black;}
     </style>
 </head>
 <body>
