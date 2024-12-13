@@ -131,6 +131,7 @@ app.get('/dashboard', (req, res) => {
 <body>
     <h1>API Dashboard</h1>
     <div id="logs"></div>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
 
