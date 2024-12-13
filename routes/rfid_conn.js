@@ -37,6 +37,8 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { rfid, fwid, twid, plis, loc, prfid } = req.body; // Assuming you're sending data in the body
+    console.log(req.body);
+    console.log(plis);
     const jPlis = JSON.parse(plis.replaceAll(`'`, `"`));
 
     pool.getConnection((err, connection) => {
@@ -46,9 +48,8 @@ router.post('/', (req, res) => {
 
         const { prodID, start, end } = plisReader(jPlis);
         if (Number(fwid) > 1000 && Number(fwid) < 9000) {
-            console.log(1);
             const query = 'SELECT EID, PPID, PLIS, CNT FROM inventory WHERE WID = ? AND PPID = ?;';
-            connection.query(query, [fwid, prodID], async (err, result) => {
+            connection.query(query, [fwid, prodID], (err, result) => {
                 if (err) {
                     return res.status(500).json({ message: 'Failed to insert data', error: err });
                 }
@@ -59,65 +60,116 @@ router.post('/', (req, res) => {
                     const rfidQuery = 'INSERT INTO rfid_logs (RFID, WID, PLIS, TSTMP, LOC, PARENT) VALUES (?, ?, ?, NOW(), ?, ?);';
                     const transferQuery = 'INSERT INTO inventory (WID, PPID, PLIS, CNT) VALUES (?, ?, ?, ?);';
 
-                    // const prfidQuery = "SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;"
-                    let qrfid = "";
+                    const prfidQuery = "SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;"
                     if (!prfid) {
-                        const [reses] = await connection.query("SELECT RLID FROM rfid_logs ORDER BY RLID DESC LIMIT 1;");
-                        qrfid = reses[0]?.RLID || ""; // Handle case when no RLID exists
+                        connection.query(prfidQuery, (err, reses) => {
+                            if (err) {
+                                return res.status(500).json({ message: 'Failed to insert data', error: err });
+                            }
 
-                    } else {
-                        qrfid = prfid;
-                    }
+                            qrfid = reses[0]["RLID"];
+                            if (prodID === iProdID && (start === iStart && end <= iEnd)) {
+                                const rWritePlis = plisWriter(prodID, start, end);
+                                const rWriteCnt = end - start + 1;
+                                if (end !== iEnd) {
+                                    const writePlis = plisWriter(prodID, end + 1, iEnd);
+                                    const writeCnt = iEnd - end;
 
-                    if (prodID === iProdID && (start === iStart && end <= iEnd)) {
-                        const rWritePlis = plisWriter(prodID, start, end);
-                        const rWriteCnt = end - start + 1;
-                        if (end !== iEnd) {
-                            const writePlis = plisWriter(prodID, end + 1, iEnd);
-                            const writeCnt = iEnd - end;
-
-                            const updateQuery = 'UPDATE inventory SET PLIS = ?, CNT = ?;';
-                            connection.query(updateQuery, [writePlis, writeCnt], (err, reses) => {
-                                if (err) {
-                                    return res.status(500).json({ message: 'Failed to insert data', error: err });
-                                }
-                                connection.query(rfidQuery, [rfid, twid, rWritePlis, loc, qrfid], (err, reses1) => {
-                                    if (err) {
-                                        return res.status(500).json({ message: 'Failed to insert data', error: err });
-                                    }
-                                    connection.query(transferQuery, [twid, iProdID, rWritePlis, rWriteCnt], (err, reses2) => {
-                                        connection.close();
+                                    const updateQuery = 'UPDATE inventory SET PLIS = ?, CNT = ?;';
+                                    connection.query(updateQuery, [writePlis, writeCnt], (err, reses) => {
                                         if (err) {
                                             return res.status(500).json({ message: 'Failed to insert data', error: err });
                                         }
+                                        connection.query(rfidQuery, [rfid, twid, rWritePlis, loc, prfid], (err, reses1) => {
+                                            if (err) {
+                                                return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                            }
+                                            connection.query(transferQuery, [twid, iProdID, rWritePlis, rWriteCnt], (err, reses2) => {
+                                                connection.close();
+                                                if (err) {
+                                                    return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                                }
 
-                                        res.status(200).json({ message: "Part of the inventory has been transferred successfully" });
+                                                res.status(200).json({ message: "Part of the inventory has been transferred successfully" });
+                                            });
+                                        });
+                                    });
+                                } else {
+                                    const deleteQuery = 'DELETE FROM inventory WHERE EID = ?;';
+                                    connection.query(deleteQuery, [result[0]["EID"]], (err, reses) => {
+                                        if (err) {
+                                            return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                        }
+                                        connection.query(rfidQuery, [rfid, twid, rWritePlis, loc, qrfid], (err, reses1) => {
+                                            if (err) {
+                                                return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                            }
+                                            connection.query(transferQuery, [twid, iProdID, rWritePlis, rWriteCnt], (err, reses2) => {
+                                                connection.close();
+                                                if (err) {
+                                                    return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                                }
+
+                                                res.status(200).json({ message: "All products transferred successfully" });
+                                            });
+                                        });
+                                    });
+                                }
+                            } else {
+                                res.status(200).json({ message: "Product Range Out of Index" });
+                            }
+                        });
+                    } else {
+                        if (prodID === iProdID && (start === iStart && end <= iEnd)) {
+                            const rWritePlis = plisWriter(prodID, start, end);
+                            const rWriteCnt = end - start + 1;
+                            if (end !== iEnd) {
+                                const writePlis = plisWriter(prodID, end + 1, iEnd);
+                                const writeCnt = iEnd - end;
+
+                                const updateQuery = 'UPDATE inventory SET PLIS = ?, CNT = ?;';
+                                connection.query(updateQuery, [writePlis, writeCnt], (err, reses) => {
+                                    if (err) {
+                                        return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                    }
+                                    connection.query(rfidQuery, [rfid, twid, rWritePlis, loc, prfid], (err, reses1) => {
+                                        if (err) {
+                                            return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                        }
+                                        connection.query(transferQuery, [twid, iProdID, rWritePlis, rWriteCnt], (err, reses2) => {
+                                            connection.close();
+                                            if (err) {
+                                                return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                            }
+
+                                            res.status(200).json({ message: "Part of the inventory has been transferred successfully" });
+                                        });
                                     });
                                 });
-                            });
+                            } else {
+                                const deleteQuery = 'DELETE FROM inventory WHERE EID = ?;';
+                                connection.query(deleteQuery, [result[0]["EID"]], (err, reses) => {
+                                    if (err) {
+                                        return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                    }
+                                    connection.query(rfidQuery, [rfid, twid, rWritePlis, loc, qrfid], (err, reses1) => {
+                                        if (err) {
+                                            return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                        }
+                                        connection.query(transferQuery, [twid, iProdID, rWritePlis, rWriteCnt], (err, reses2) => {
+                                            connection.close();
+                                            if (err) {
+                                                return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                            }
+
+                                            res.status(200).json({ message: "All products transferred successfully" });
+                                        });
+                                    });
+                                });
+                            }
                         } else {
-                            const deleteQuery = 'DELETE FROM inventory WHERE EID = ?;';
-                            connection.query(deleteQuery, [result[0]["EID"]], (err, reses) => {
-                                if (err) {
-                                    return res.status(500).json({ message: 'Failed to insert data', error: err });
-                                }
-                                connection.query(rfidQuery, [rfid, twid, rWritePlis, loc, qrfid], (err, reses1) => {
-                                    if (err) {
-                                        return res.status(500).json({ message: 'Failed to insert data', error: err });
-                                    }
-                                    connection.query(transferQuery, [twid, iProdID, rWritePlis, rWriteCnt], (err, reses2) => {
-                                        connection.close();
-                                        if (err) {
-                                            return res.status(500).json({ message: 'Failed to insert data', error: err });
-                                        }
-
-                                        res.status(200).json({ message: "All products transferred successfully" });
-                                    });
-                                });
-                            });
+                            res.status(200).json({ message: "Product Range Out of Index" });
                         }
-                    } else {
-                        res.status(200).json({ message: "Product Range Out of Index" });
                     }
                 } else {
                     res.status(200).json({ message: "Inventory Empty" });
