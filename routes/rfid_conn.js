@@ -82,14 +82,21 @@ router.post('/', (req, res) => {
 
                     if (prodID === iProdID && (start === iStart && end <= iEnd)) {
                         const rWritePlis = plisWriter(prodID, start, end);
+                        const rWriteCnt = end - start;
                         if (end !== iEnd) {
                             const writePlis = plisWriter(prodID, end + 1, iEnd);
                             const writeCnt = iEnd - end;
 
                             const updateQuery = 'UPDATE inventory SET PLIS = ?, CNT = ?;';
                             connection.query(updateQuery, [writePlis, writeCnt], (err, reses) => {
+                                if (err) {
+                                    return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                }
                                 connection.query(rfidQuery, [rfid, twid, rWritePlis, loc], (err, reses1) => {
-                                    connection.query(transferQuery, [twid, iProdID, rWritePlis, writeCnt], (err, reses2) => {
+                                    if (err) {
+                                        return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                    }
+                                    connection.query(transferQuery, [twid, iProdID, rWritePlis, rWriteCnt], (err, reses2) => {
                                         connection.close();
                                         if (err) {
                                             return res.status(500).json({ message: 'Failed to insert data', error: err });
@@ -102,8 +109,14 @@ router.post('/', (req, res) => {
                         } else {
                             const deleteQuery = 'DELETE FROM inventory WHERE EID = ?;';
                             connection.query(deleteQuery, [result[0]["EID"]], (err, reses) => {
+                                if (err) {
+                                    return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                }
                                 connection.query(rfidQuery, [rfid, twid, rWritePlis, loc], (err, reses1) => {
-                                    connection.query(transferQuery, [twid, iProdID, rWritePlis, writeCnt], (err, reses2) => {
+                                    if (err) {
+                                        return res.status(500).json({ message: 'Failed to insert data', error: err });
+                                    }
+                                    connection.query(transferQuery, [twid, iProdID, rWritePlis, rWriteCnt], (err, reses2) => {
                                         connection.close();
                                         if (err) {
                                             return res.status(500).json({ message: 'Failed to insert data', error: err });
