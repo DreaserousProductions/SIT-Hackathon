@@ -12,6 +12,10 @@ function plisReader(plis) {
     return { prodID, start, end };
 }
 
+function plisWriter(prodID, start, end) {
+    return { "start": `${prodID}_${start}`, "end": `${prodID}_${end}` };
+}
+
 router.get('/', (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {
@@ -63,15 +67,36 @@ router.post('/', (req, res) => {
                 }
             });
         } else {
-            const query = 'SELECT PPID, PLIS, CNT FROM inventory WHERE WID = 1000;';
-            const updateQuery = 'UPDATE inventory PLIS = ?, CNT = ?;';
+            const query = 'SELECT EID, PPID, PLIS, CNT FROM inventory WHERE WID = 1000;';
             connection.query(query, (err, result) => {
                 if (err) {
                     return res.status(500).json({ message: 'Failed to insert data', error: err });
                 }
-                const { iProdID, iStart, iEnd } = plisReader(result[0]["PLIS"]);
-                console.log(iProdID, iStart, iEnd);
-                console.log(result[0]['CNT']);
+
+                const { prodID: iProdID, start: iStart, end: iEnd } = plisReader(result[0]["PLIS"]);
+                const { prodID, start, end } = plisReader(plis);
+                if (start === iStart || end <= iEnd) {
+                    if (end !== iEnd) {
+                        const writePlis = plisWriter(prodID, end + 1, iEnd);
+                        const writeCnt = end - iEnd + 1;
+
+                        const updateQuery = 'UPDATE inventory PLIS = ?, CNT = ?;';
+                        connection.query(updateQuery, [JSON.stringify(writePlis), writeCnt], (err, res) => {
+                            connection.close();
+                            if (err) {
+                                return res.status(500).json({ message: 'Failed to insert data', error: err });
+                            }
+                        });
+                    } else {
+                        const deleteQuery = 'DELETE FROM inventory WHERE EID = ?;';
+                        connection.query(updateQuery, [result[0]["EID"]], (err, res) => {
+                            connection.close();
+                            if (err) {
+                                return res.status(500).json({ message: 'Failed to insert data', error: err });
+                            }
+                        });
+                    }
+                }
 
                 res.status(200).json({ message: "Testing Successful" });
                 // connection.query(newQuery, [rfid, jPlis.replaceAll(`'`, `"`), loc, Number(term)], (err, result) => {
