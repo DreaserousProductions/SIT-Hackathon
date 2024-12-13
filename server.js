@@ -267,7 +267,7 @@ app.get('/dashboard', (req, res) => {
         const socket = io();
 
         const appendLog = (log) => {
-            if(log.includes("rfid")) {
+            if(log.toString().includes("rfid")) {
                 const elem = document.querySelector(".rfid");
                 const border1 = document.querySelector("#rfid-ver");
                 const border2 = document.querySelector("#rfid-hor");
@@ -281,7 +281,7 @@ app.get('/dashboard', (req, res) => {
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
                 }, 1000);
-            } else if(log.includes("warehouse")) {
+            } else if(log.toString().includes("warehouse")) {
                 const elem = document.querySelector(".warehouse");
                 const border1 = document.querySelector("#ware-ver");
                 const border2 = document.querySelector("#ware-hor");
@@ -295,7 +295,7 @@ app.get('/dashboard', (req, res) => {
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
                 }, 10000);
-            } else if(log.includes("details")) {
+            } else if(log.toString().includes("details")) {
                 const elem = document.querySelector(".details");
                 const border1 = document.querySelector("#det-ver");
                 const border2 = document.querySelector("#det-hor");
@@ -309,7 +309,7 @@ app.get('/dashboard', (req, res) => {
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
                 }, 1000);
-            } else if(log.includes("manufacturer")) {
+            } else if(log.toString().includes("manufacturer")) {
                 const elem = document.querySelector(".manufacturer");
                 const border1 = document.querySelector("#manu-ver");
                 const border2 = document.querySelector("#manu-hor");
