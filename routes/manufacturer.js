@@ -24,36 +24,39 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const { rfid, plis, dop, doe } = req.body;
+    const { ppid, pname, date, count } = req.body;
 
     pool.getConnection((err, connection) => {
         if (err) {
             return res.status(500).json({ message: 'Database connection failed', error: err });
         }
 
-        const query = 'INSERT INTO manufactured_products (RFID, PLIS, DOP, DOE) VALUES (?, ?, ?, ?);';
-        connection.query(query, [rfid.replaceAll(`'`, `"`), plis.replaceAll(`'`, `"`), dop, doe], async (err, result) => {
+        const query = 'SELECT * FROM products WHERE ppid = ?;';
+        const manQuery = 'INSERT INTO manufactuered_products (PLIS, DOP, DOE) VALUES (?, ?, ?);';
+        connection.query(query, [ppid], async (err, result) => {
             connection.release(); // Always release the connection
 
             if (err) {
                 return res.status(500).json({ message: 'Failed to insert data', error: err });
             }
 
-            // res.status(200).json({ message: 'Data inserted successfully', result });
-            try {
-                // Generate QR code as a buffer
-                const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/details?rfid=${JSON.parse(rfid.replaceAll(`'`, `"`))["rfid1"]}`, {
-                    errorCorrectionLevel: 'H', // High error correction level
-                    type: 'png',               // Output as PNG
-                });
+            console.log(result);
 
-                // Set the content type to PNG
-                res.setHeader('Content-Type', 'image/png');
-                res.send(qrBuffer); // Send the PNG buffer as the response
-            } catch (err) {
-                console.error('Error generating QR code:', err);
-                res.status(500).json({ error: 'Failed to generate QR code' });
-            }
+            res.status(200).json({ message: 'Data inserted successfully', result });
+            // try {
+            //     // Generate QR code as a buffer
+            //     const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/details?rfid=${JSON.parse(rfid.replaceAll(`'`, `"`))["rfid1"]}`, {
+            //         errorCorrectionLevel: 'H', // High error correction level
+            //         type: 'png',               // Output as PNG
+            //     });
+
+            //     // Set the content type to PNG
+            //     res.setHeader('Content-Type', 'image/png');
+            //     res.send(qrBuffer); // Send the PNG buffer as the response
+            // } catch (err) {
+            //     console.error('Error generating QR code:', err);
+            //     res.status(500).json({ error: 'Failed to generate QR code' });
+            // }
         });
     });
 });
