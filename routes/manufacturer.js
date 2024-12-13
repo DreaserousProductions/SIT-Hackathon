@@ -46,20 +46,25 @@ router.post('/', (req, res) => {
 
         const query = 'SELECT * FROM products WHERE ppid = ?;';
         const manQuery = 'INSERT INTO manufactured_products (PLIS, DOP, DOE) VALUES (?, ?, ?);';
-        connection.query(query, [ppid], async (err, result) => {
+        const updateQuery = 'UPDATE products SET CUR_PID = ? WHERE PPID = ?';
+        connection.query(query, [ppid], (err, result) => {
             if (err) {
                 return res.status(500).json({ message: 'Failed to insert data', error: err });
             }
 
             if (result.length !== 0) {
-                console.log(result[0]["PPID"]);
-                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "start" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + count}"}`, dateType, formatDateToMySQL(doe)], async (err, results) => {
-                    connection.release();
+                connection.query(manQuery, [`{"start" : "${result[0]["PPID"]}_${result[0]["CUR_PID"]}", "end" : "${result[0]["PPID"]}_${Number(result[0]["CUR_PID"]) + count}"}`, dateType, formatDateToMySQL(doe)], (err, results) => {
                     if (err) {
                         return res.status(500).json({ message: 'Failed to insert data', error: err });
                     }
 
-                    res.status(200).json({ message: 'Data inserted successfully', result });
+                    connection.query(updateQuery, [Number(result[0]["CUR_PID"]) + count, ppid], (err, res) => {
+                        connection.release();
+                        if (err) {
+                            return res.status(500).json({ message: 'Failed to insert data', error: err });
+                        }
+                        res.status(200).json({ message: 'Data inserted successfully', result });
+                    });
                 });
             } else {
                 return res.status(404).json({ message: 'Product ID not found' });
