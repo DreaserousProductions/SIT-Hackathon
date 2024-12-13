@@ -42,7 +42,7 @@ router.post('/', (req, res) => {
             // res.status(200).json({ message: 'Data inserted successfully', result });
             try {
                 // Generate QR code as a buffer
-                const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/routes/details?rfid=${JSON.parse(rfid.replaceAll(`'`, `"`))["rfid1"]}`, {
+                const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/details?rfid=${JSON.parse(rfid.replaceAll(`'`, `"`))["rfid1"]}`, {
                     errorCorrectionLevel: 'H', // High error correction level
                     type: 'png',               // Output as PNG
                 });
