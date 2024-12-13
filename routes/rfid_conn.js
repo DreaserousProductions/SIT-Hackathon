@@ -79,12 +79,12 @@ router.post('/', (req, res) => {
                     if (end !== iEnd) {
                         const writePlis = plisWriter(prodID, end + 1, iEnd);
                         console.log(writePlis);
-                        const jWritePlis = JSON.parse(writePlis);
+                        const jWritePlis = JSON.stringify(writePlis);
                         console.log(jWritePlis);
                         const writeCnt = iEnd - end + 1;
 
                         const updateQuery = 'UPDATE inventory PLIS = ?, CNT = ?;';
-                        connection.query(updateQuery, [jWritePlis, writeCnt], (err, reses) => {
+                        connection.query(updateQuery, [jWritePlis.replaceAll(`'`, `"`), writeCnt], (err, reses) => {
                             connection.close();
                             if (err) {
                                 return res.status(500).json({ message: 'Failed to insert data', error: err });
