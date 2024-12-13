@@ -4,6 +4,17 @@ const QRCode = require('qrcode');
 
 const router = express.Router();
 
+function formatDateToMySQL(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');  // Month is 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 router.get('/', (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {
@@ -42,8 +53,14 @@ router.post('/', (req, res) => {
             }
 
             if (result.length !== 0) {
-                connection.query(manQuery, [`{"start" : "${result[0]["ppid"]}_${result[0]["cur_pid"]}", "start" : "${result[0]["ppid"]}_${result[0]["cur_pid"] + count}"}`, dateType, String(doe).replace("T", " ").split(".")[0]], async (err, results) => { });
-                res.status(200).json({ message: 'Data inserted successfully', result });
+                connection.query(manQuery, [`{"start" : "${result[0]["ppid"]}_${result[0]["cur_pid"]}", "start" : "${result[0]["ppid"]}_${result[0]["cur_pid"] + count}"}`, dateType, formatDateToMySQL(doe)], async (err, results) => {
+                    connection.release();
+                    if (err) {
+                        return res.status(500).json({ message: 'Failed to insert data', error: err });
+                    }
+
+                    res.status(200).json({ message: 'Data inserted successfully', result });
+                });
             } else {
                 return res.status(404).json({ message: 'Product ID not found' });
             }
@@ -65,6 +82,5 @@ router.post('/', (req, res) => {
         });
     });
 });
-
 
 module.exports = router;
