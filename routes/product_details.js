@@ -37,7 +37,7 @@ router.get('/', (req, res) => {
 
             console.log(pid, id);
 
-            result.forEach(res1 => {
+            for (const res1 of result) {
                 const { prodID, start, end } = plisReader(res1["PLIS"])
 
                 if (prodID === pid) {
@@ -45,7 +45,7 @@ router.get('/', (req, res) => {
                         return res.status(200).json({ message: 'Data successfully retrieved', res1 });
                     }
                 }
-            });
+            }
         });
     });
 });
