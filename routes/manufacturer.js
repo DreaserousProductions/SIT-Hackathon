@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { ppid, date, count } = req.body;
     const dateType = new Date(date)
 
@@ -72,23 +72,26 @@ router.post('/', (req, res) => {
             } else {
                 return res.status(404).json({ message: 'Product ID not found' });
             }
-
-            // try {
-            //     // Generate QR code as a buffer
-            //     const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/details?rfid=${JSON.parse(rfid.replaceAll(`'`, `"`))["rfid1"]}`, {
-            //         errorCorrectionLevel: 'H', // High error correction level
-            //         type: 'png',               // Output as PNG
-            //     });
-
-            //     // Set the content type to PNG
-            //     res.setHeader('Content-Type', 'image/png');
-            //     res.send(qrBuffer); // Send the PNG buffer as the response
-            // } catch (err) {
-            //     console.error('Error generating QR code:', err);
-            //     res.status(500).json({ error: 'Failed to generate QR code' });
-            // }
         });
     });
+
+    for (cou in count) {
+        console.log(1);
+        // try {
+        //     // Generate QR code as a buffer
+        //     const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/details?rfid=${JSON.parse(rfid.replaceAll(`'`, `"`))["rfid1"]}`, {
+        //         errorCorrectionLevel: 'H', // High error correction level
+        //         type: 'png',               // Output as PNG
+        //     });
+
+        //     // Set the content type to PNG
+        //     res.setHeader('Content-Type', 'image/png');
+        //     res.send(qrBuffer); // Send the PNG buffer as the response
+        // } catch (err) {
+        //     console.error('Error generating QR code:', err);
+        //     res.status(500).json({ error: 'Failed to generate QR code' });
+        // }
+    }
 });
 
 module.exports = router;
