@@ -23,12 +23,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const { rfid, plis, dop, doe } = req.body; // Assuming you're sending data in the body
-    console.log(rfid);
-    console.log(JSON.parse(rfid.replaceAll(`'`, `"`)));
-    console.log(JSON.parse(plis.replaceAll(`'`, `"`)));
-    console.log(dop);
-    console.log(doe);
+    const { rfid, plis, dop, doe } = req.body;
 
     pool.getConnection((err, connection) => {
         if (err) {
@@ -36,7 +31,7 @@ router.post('/', (req, res) => {
         }
 
         const query = 'INSERT INTO manufactured_products (RFID, PLIS, DOP, DOE) VALUES (?, ?, ?, ?);';
-        connection.query(query, [JSON.parse(rfid), JSON.parse(plis), dop, doe], (err, result) => {
+        connection.query(query, [JSON.parse(rfid.replaceAll(`'`, `"`)), JSON.parse(plis.replaceAll(`'`, `"`)), dop, doe], (err, result) => {
             connection.release(); // Always release the connection
 
             if (err) {
