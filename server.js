@@ -271,57 +271,57 @@ app.get('/dashboard', (req, res) => {
                 const border1 = document.querySelector("#rfid-ver");
                 const border2 = document.querySelector("#rfid-hor");
 
-                elem.style.animation = "animation: pulse infinite 1s alternate";
+                elem.style.animation = "pulse infinite 1s alternate";
                 border1.style.border = "2px dashed lightgreen";
                 border2.style.border = "2px dashed lightgreen";
 
                 setTimeout(() => {
-                    elem.style.animation = "animation: none";
+                    elem.style.animation = "none";
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
-                }, 1000);
+                }, 2000);
             } else if(log.endpoint.includes("warehouse")) {
                 const elem = document.querySelector(".warehouse");
                 const border1 = document.querySelector("#ware-ver");
                 const border2 = document.querySelector("#ware-hor");
 
-                elem.style.animation = "animation: pulse infinite 1s alternate";
+                elem.style.animation = "pulse infinite 1s alternate";
                 border1.style.border = "2px dashed lightgreen";
                 border2.style.border = "2px dashed lightgreen";
 
                 setTimeout(() => {
-                    elem.style.animation = "animation: none";
+                    elem.style.animation = "none";
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
-                }, 10000);
+                }, 2000);
             } else if(log.endpoint.includes("details")) {
                 const elem = document.querySelector(".details");
                 const border1 = document.querySelector("#det-ver");
                 const border2 = document.querySelector("#det-hor");
 
-                elem.style.animation = "animation: pulse infinite 1s alternate";
+                elem.style.animation = "pulse infinite 1s alternate";
                 border1.style.border = "2px dashed lightgreen";
                 border2.style.border = "2px dashed lightgreen";
 
                 setTimeout(() => {
-                    elem.style.animation = "animation: none";
+                    elem.style.animation = "none";
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
-                }, 1000);
+                }, 2000);
             } else if(log.endpoint.includes("manufacturer")) {
                 const elem = document.querySelector(".manufacturer");
                 const border1 = document.querySelector("#manu-ver");
                 const border2 = document.querySelector("#manu-hor");
 
-                elem.style.animation = "animation: pulse infinite 1s alternate";
+                elem.style.animation = "pulse infinite 1s alternate";
                 border1.style.border = "2px dashed lightgreen";
                 border2.style.border = "2px dashed lightgreen";
 
                 setTimeout(() => {
-                    elem.style.animation = "animation: none";
+                    elem.style.animation = "none";
                     border1.style.border = "2px dashed black";
                     border2.style.border = "2px dashed black";
-                }, 1000);
+                }, 2000);
             }
 
             const logsDiv = document.querySelector('.top');
