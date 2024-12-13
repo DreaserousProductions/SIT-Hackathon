@@ -77,6 +77,7 @@ router.post('/', async (req, res) => {
     });
 
     for (let i = 0; i < count; i++) {
+        console.log(i);
         try {
             // Generate QR code as a buffer
             const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/details?ppid=1001_${11000 + i}`, {
