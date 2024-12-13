@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { rfid, plis, loc, term } = req.body; // Assuming you're sending data in the body
-    console.log(req.body["plis"]);
+    console.log(plis.replaceAll(`'`, `"`));
 
     pool.getConnection((err, connection) => {
         if (err) {
@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
                 }
 
                 if (result.length != 0) {
-                    connection.query(prevQuery, [rfid, plis, loc, result[0]["RLID"], term], (err, result) => {
+                    connection.query(prevQuery, [rfid, plis.replaceAll(`'`, `"`), loc, result[0]["RLID"], term], (err, result) => {
                         connection.release();
                         if (err) {
                             return res.status(500).json({ message: 'Failed to insert data', error: err });
