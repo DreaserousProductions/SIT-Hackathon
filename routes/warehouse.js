@@ -4,13 +4,14 @@ const { pool } = require('../server');
 const router = express.Router();
 
 router.get('/', (req, res) => {
+    const { wid } = req.query;
     pool.getConnection((err, connection) => {
         if (err) {
             return res.status(500).json({ message: 'Database connection failed', error: err });
         }
 
-        const query = 'SELECT * FROM ware_conditions;';
-        connection.query(query, (err, result) => {
+        const query = 'SELECT * FROM ware_conditions WHERE WID = ? ORDER BY CID DESC LIMIT 1;';
+        connection.query(query, [wid], (err, result) => {
             connection.release(); // Always release the connection
 
             if (err) {
