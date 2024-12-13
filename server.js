@@ -50,6 +50,7 @@
 require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
+const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const http = require('http');
@@ -65,7 +66,8 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
 app.use(cors(corsOptions));
-
+// Attach the static directory
+app.use(express.static(path.join(__dirname, 'public')));
 // Middleware Configuration
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -133,13 +135,131 @@ app.get('/dashboard', (req, res) => {
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
         #logs { max-height: 80vh; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
         .log { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; }
-        #main { width: 100%; border: 1px solid black;}
+        #main { width: 100%; height:85vh; border: 1px solid black; display: flex; flex-direction:column; align-items:center; justify-content:center;}
+        #main .man-img {max-width:8%;transition: box-shadow 1s; animation: pulse infinite 1s alternate;}
+        .top {width: 650px; height: 40px; margin-bottom:20px;background: rgba(100, 100, 100, 0.25);border-radius: 5px; border: 1px dashed gray;font-size:12px;overflow:hidden;display: flex; align-items:center; justify-content:center;font-family: monospace;}
+        .bottom {margin-top:10px;}
+        .api {
+            height:100px;
+            width: 100px;
+
+            position: absolute;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(100, 100, 100, 0.25);
+            border-radius: 5px;
+            border: 1px dashed gray
+        }
+
+        .api img {
+            width: 80px;
+        }
+
+        .warehouse {
+            top: 100px;
+            left: 100px;
+        }
+
+        .manufacturer {
+            top: 100px;
+            right: 100px;
+        }
+
+        .rfid {
+            bottom: 100px;
+            left: 100px;
+        }
+
+        .details {
+            bottom: 100px;
+            right: 100px;
+        }
+
+        .line {
+            border: 2px dashed black;
+            position: absolute;
+        }
+
+        #ware-ver {
+            transform: translateX(-490px) translateY(-80px);
+            height: 120px;
+        }
+
+        #ware-hor {
+            transform: translateX(-270px) translateY(-20px);
+            width: 425px;
+        }
+
+        #rfid-ver {
+            transform: translateX(-490px) translateY(90px);
+            height: 80px;
+        }
+
+        #rfid-hor {
+            transform: translateX(-270px) translateY(50px);
+            width: 425px;
+        }
+
+        #manu-ver {
+            transform: translateX(490px) translateY(-80px);
+            height: 120px;
+        }
+
+        #manu-hor {
+            transform: translateX(270px) translateY(-20px);
+            width: 425px;
+        }
+
+        #det-ver {
+            transform: translateX(490px) translateY(90px);
+            height: 80px;
+        }
+
+        #det-hor {
+            transform: translateX(270px) translateY(50px);
+            width: 425px;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 5px 2px green;
+            }
+            100% {
+                box-shadow: 0 0 10px 5px green;
+            }
+        }
     </style>
 </head>
 <body>
     <h1>API Dashboard</h1>
     <div id=main>
-        All
+        <div class="line" id="ware-ver"></div>
+        <div class="line" id="ware-hor"></div>
+        <div class="line" id="rfid-ver"></div>
+        <div class="line" id="rfid-hor"></div>
+        <div class="line" id="manu-ver"></div>
+        <div class="line" id="manu-hor"></div>
+        <div class="line" id="det-ver"></div>
+        <div class="line" id="det-hor"></div>
+        <div class="top">
+        [2024-12-13T17:37:08.401Z] GET /rfid - Body: {}</div>
+        <img class="man-img" src="./server.png">
+        <div class="bottom">Server</div>
+        <div class="api warehouse">
+            <img src="./warehouse.png">
+        </div>
+        <div class="api manufacturer">
+            <img src="./factory.png">
+        </div>
+        <div class="api rfid">
+            <img src="./rfid.png">
+        </div>
+        <div class="api details">
+            <img src="./details.png">
+        </div>
     </div>
     <div id="logs"></div>
     <script src="/socket.io/socket.io.js"></script>
@@ -147,6 +267,21 @@ app.get('/dashboard', (req, res) => {
         const socket = io();
 
         const appendLog = (log) => {
+            if(log.includes("rfid")) {
+                const elem = document.querySelector(".rfid");
+                const border1 = document.querySelector("#rfid-ver");
+                const border2 = document.querySelector("#rfid-hor");
+
+                elem.style.animation = "animation: pulse infinite 1s alternate";
+                border1.style.border = "2px dashed lightgreen";
+                border2.style.border = "2px dashed lightgreen";
+
+                setTimeout(() => {
+                    elem.style.animation = "animation: none";
+                    border1.style.border = "2px dashed black";
+                    border2.style.border = "2px dashed black";
+                }, 1000);
+            }
             const logsDiv = document.getElementById('logs');
             const logDiv = document.createElement('div');
             logDiv.className = 'log';
