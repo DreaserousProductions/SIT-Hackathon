@@ -4,6 +4,8 @@ const { pool } = require('../server');
 const router = express.Router();
 
 function plisReader(plis) {
+    console.log(plis);
+    console.log(plis["start"]);
     const prodID = Number(plis["start"].split("_")[0]);
 
     const start = Number(plis["start"].split("_")[1]);
@@ -37,7 +39,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { rfid, wid, plis, loc } = req.body; // Assuming you're sending data in the body
-    const jPlis = JSON.stringify(plis.replaceAll(`'`, `"`));
+    const jPlis = plis.replaceAll(`'`, `"`);
     console.log(jPlis);
 
     pool.getConnection((err, connection) => {
