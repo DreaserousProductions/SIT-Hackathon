@@ -269,7 +269,6 @@ app.get('/dashboard', (req, res) => {
             Deatils
         </div>
     </div>
-    <div id="logs"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
