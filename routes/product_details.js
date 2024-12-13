@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
         }
 
         const query = 'SELECT * FROM manufactured_products WHERE JSON_CONTAINS(RFID, ?);';
-        connection.query(query, (err, result) => {
+        connection.query(query, [rfid], (err, result) => {
             connection.release(); // Always release the connection
 
             if (err) {
