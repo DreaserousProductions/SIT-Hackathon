@@ -330,7 +330,7 @@ app.get('/dashboard', (req, res) => {
         };
 
         // Handle real-time logs
-        socket.on('api_access', (log) => appendLog(log));
+        socket.on('api_access', (log) => appendLog(log.toString()));
 
         // Connect to WebSocket server
         socket.on('connect', () => {
