@@ -24,7 +24,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const { ppid, pname, date, count } = req.body;
+    const { ppid, date, count } = req.body;
+    console.log(date);
 
     pool.getConnection((err, connection) => {
         if (err) {
@@ -33,16 +34,18 @@ router.post('/', (req, res) => {
 
         const query = 'SELECT * FROM products WHERE ppid = ?;';
         const manQuery = 'INSERT INTO manufactuered_products (PLIS, DOP, DOE) VALUES (?, ?, ?);';
-        connection.query(query, [ppid], async (err, result) => {
-            connection.release(); // Always release the connection
-
+        connection.query(query, [ppid, date, date + count], async (err, result) => {
             if (err) {
                 return res.status(500).json({ message: 'Failed to insert data', error: err });
             }
 
-            console.log(result[0]["PPID"]);
+            if (result.length !== 0) {
+                connection.query(manQuery, [ppid], async (err, results) => { });
+                res.status(200).json({ message: 'Data inserted successfully', result });
+            } else {
+                return res.status(404).json({ message: 'Product ID not found' });
+            }
 
-            res.status(200).json({ message: 'Data inserted successfully', result });
             // try {
             //     // Generate QR code as a buffer
             //     const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/details?rfid=${JSON.parse(rfid.replaceAll(`'`, `"`))["rfid1"]}`, {
