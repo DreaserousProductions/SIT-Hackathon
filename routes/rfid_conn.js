@@ -82,7 +82,9 @@ router.post('/', (req, res) => {
 
                     if (prodID === iProdID && (start === iStart && end <= iEnd)) {
                         const rWritePlis = plisWriter(prodID, start, end);
-                        const rWriteCnt = end - start;
+                        console.log(rWritePlis);
+                        console.log(end);
+                        const rWriteCnt = end - start + 1;
                         if (end !== iEnd) {
                             const writePlis = plisWriter(prodID, end + 1, iEnd);
                             const writeCnt = iEnd - end;
