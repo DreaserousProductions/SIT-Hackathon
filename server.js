@@ -108,10 +108,12 @@ const logs = [];
 const warehouseRouter = require('./routes/warehouse');
 const manfacturerRouter = require('./routes/manufacturer');
 const detailsRouter = require('./routes/product_details');
+const rfidRouter = require('./routes/rfid_conn');
 
 app.use('/warehouse', warehouseRouter);
 app.use('/manufacturer', manfacturerRouter);
 app.use('/details', detailsRouter);
+app.use('/rfid', rfidRouter);
 
 // Dashboard Route
 app.get('/dashboard', (req, res) => {
