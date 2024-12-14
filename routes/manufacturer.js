@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
                                 return res.status(500).json({ message: 'Failed to insert data', error: err });
                             }
                             res.status(200).json({
-                                message: 'Data inserted successfully', PLIS: `start:${ppid}_${result[0]["CUR_PID"]}, end: ${ppid}_${Number(result[0]["CUR_PID"]) + Number(count)}`
+                                message: 'Data inserted successfully', PLIS: `start:${ppid}_${result[0]["CUR_PID"]}, end:${ppid}_${Number(result[0]["CUR_PID"]) + Number(count - 1)}`
                             });
                         });
                     });
