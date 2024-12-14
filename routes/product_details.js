@@ -105,7 +105,7 @@ router.get('/', (req, res) => {
                                                     <li class="location-item">
                                                         <strong>Location:</strong> ${location.LOC}<br>
                                                         <span class="timestamp">Timestamp: ${new Date(location.TSTMP).toLocaleString()}</span><br>
-                                                        <strong>Temperature:</strong> ${warehouse}<br>
+                                                        <strong>Temperature:</strong> ${warehouse.toString()}<br>
                                                         <strong>Humidity:</strong> ${warehouse.HUMIDITY}<br>
                                                     </li>
                                                 `).join('')}
