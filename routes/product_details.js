@@ -48,7 +48,52 @@ router.get('/', (req, res) => {
                                 return res.status(500).json({ message: 'Failed to retrieve data', error: err });
                             }
 
-                            return res.status(200).json({ message: 'Data successfully retrieved', results });
+                            // Generate HTML response
+                            const htmlResponse = `
+                                <!DOCTYPE html>
+                                <html lang="en">
+                                <head>
+                                    <meta charset="UTF-8">
+                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                    <title>Product Location History</title>
+                                    <style>
+                                        body {
+                                            font-family: Arial, sans-serif;
+                                            line-height: 1.6;
+                                            margin: 20px;
+                                        }
+                                        .location-list {
+                                            list-style-type: none;
+                                            padding: 0;
+                                        }
+                                        .location-item {
+                                            background: #f9f9f9;
+                                            margin: 10px 0;
+                                            padding: 15px;
+                                            border: 1px solid #ddd;
+                                            border-radius: 5px;
+                                        }
+                                        .timestamp {
+                                            font-size: 0.9em;
+                                            color: #555;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <h1>Product Location History</h1>
+                                    <ul class="location-list">
+                                        ${results.map(r => `
+                                            <li class="location-item">
+                                                <strong>Location:</strong> ${r.LOC}<br>
+                                                <span class="timestamp">Timestamp: ${new Date(r.TSTMP).toLocaleString()}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </body>
+                                </html>
+                            `;
+
+                            return res.status(200).send(htmlResponse);
                         });
                         break;
                     }
@@ -59,6 +104,68 @@ router.get('/', (req, res) => {
 });
 
 module.exports = router;
+
+// const express = require('express');
+// const { pool } = require('../server');
+
+// const router = express.Router();
+
+// function plisReader(plis) {
+//     const prodID = Number(plis["start"].split("_")[0]);
+
+//     const start = Number(plis["start"].split("_")[1]);
+//     const end = Number(plis["end"].split("_")[1]);
+
+//     return { prodID, start, end };
+// }
+
+// router.get('/', (req, res) => {
+//     const { ppid } = req.query;
+
+//     if (!ppid) {
+//         return res.status(400).json({ error: 'Missing RFID parameter' });
+//     }
+
+//     pool.getConnection((err, connection) => {
+//         if (err) {
+//             return res.status(500).json({ message: 'Database connection failed', error: err });
+//         }
+
+//         const query = 'SELECT * FROM rfid_logs ORDER BY RLID DESC;';
+//         const rfidQuery = `WITH RECURSIVE ParentTree AS (     SELECT RLID, RFID,WID, PLIS, TSTMP, LOC, PARENT     FROM rfid_logs     WHERE RLID = ?     UNION ALL     SELECT r.RLID, r.RFID,r.WID, r.PLIS, r.TSTMP, r.LOC, r.PARENT     FROM rfid_logs r     JOIN ParentTree pt ON r.RLID = pt.PARENT ) SELECT * FROM ParentTree;`;
+//         connection.query(query, (err, result) => {
+//             if (err) {
+//                 return res.status(500).json({ message: 'Failed to retrieve data', error: err });
+//             }
+
+//             const prodNid = ppid.split("_");
+//             const pid = Number(prodNid[0]);
+//             const id = Number(prodNid[1]);
+
+//             console.log(pid, id);
+
+//             for (const res1 of result) {
+//                 const { prodID, start, end } = plisReader(res1["PLIS"]);
+
+//                 if (prodID === pid) {
+//                     if (id >= start && id <= end) {
+//                         connection.query(rfidQuery, [res1["RLID"]], (err, results) => {
+//                             connection.release(); // Always release the connection
+//                             if (err) {
+//                                 return res.status(500).json({ message: 'Failed to retrieve data', error: err });
+//                             }
+
+//                             return res.status(200).json({ message: 'Data successfully retrieved', results });
+//                         });
+//                         break;
+//                     }
+//                 }
+//             }
+//         });
+//     });
+// });
+
+// module.exports = router;
 // const express = require('express');
 // const { pool } = require('../server');
 // const fs = require('fs');

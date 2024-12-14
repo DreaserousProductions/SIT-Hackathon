@@ -19,5 +19,5 @@ const generateQRCode = async (link) => {
 };
 
 // Example usage
-const link = 'http://52.251.41.188:7898/details?ppid=1004_10301';
+const link = 'http://52.251.41.188:7898/details?ppid=1001_13605';
 generateQRCode(link);
