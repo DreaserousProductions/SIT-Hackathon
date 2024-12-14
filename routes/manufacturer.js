@@ -78,26 +78,26 @@ router.post('/', async (req, res) => {
         });
     });
 
-    for (let i = 0; i < count; i++) {
-        console.log(i);
-        try {
-            // Generate QR code as a buffer
-            const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/details?ppid=1001_${11000 + i}`, {
-                errorCorrectionLevel: 'H', // High error correction level
-                type: 'png',               // Output as PNG
-            });
+    // for (let i = 0; i < count; i++) {
+    //     console.log(i);
+    //     try {
+    //         // Generate QR code as a buffer
+    //         const qrBuffer = await QRCode.toBuffer(`http://52.251.41.188:7898/details?ppid=1001_${11000 + i}`, {
+    //             errorCorrectionLevel: 'H', // High error correction level
+    //             type: 'png',               // Output as PNG
+    //         });
 
-            // Set the content type to PNG
-            // Save the QR buffer as a file
-            const filePath = `qrcode_${i}.png`; // Name the file dynamically
-            fs.writeFileSync(filePath, qrBuffer);
-            // res.setHeader('Content-Type', 'image/png');
-            // res.send(qrBuffer); // Send the PNG buffer as the response
-        } catch (err) {
-            console.error('Error generating QR code:', err);
-            res.status(500).json({ error: 'Failed to generate QR code' });
-        }
-    }
+    //         // Set the content type to PNG
+    //         // Save the QR buffer as a file
+    //         const filePath = `qrcode_${i}.png`; // Name the file dynamically
+    //         fs.writeFileSync(filePath, qrBuffer);
+    //         // res.setHeader('Content-Type', 'image/png');
+    //         // res.send(qrBuffer); // Send the PNG buffer as the response
+    //     } catch (err) {
+    //         console.error('Error generating QR code:', err);
+    //         res.status(500).json({ error: 'Failed to generate QR code' });
+    //     }
+    // }
 });
 
 module.exports = router;
