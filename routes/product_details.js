@@ -48,14 +48,15 @@ router.get('/', (req, res) => {
                                 return res.status(500).json({ message: 'Failed to retrieve data', error: err });
                             }
 
+                            console.log(results);
                             const warehouseConditionsPromises = results.map(location => {
+                                console.log(location);
                                 return new Promise((resolve, reject) => {
                                     const warehouseQuery = 'SELECT * FROM ware_conditions WHERE WID = ? ORDER BY CID DESC LIMIT 1;';
                                     connection.query(warehouseQuery, [location.WID], (err, warehouseResult) => {
                                         if (err) {
                                             return reject(err);
                                         }
-                                        console.log(warehouseResult);
                                         resolve({
                                             location,
                                             warehouse: warehouseResult[0] || { TEMP: 'N/A', HUMIDITY: 'N/A' }
