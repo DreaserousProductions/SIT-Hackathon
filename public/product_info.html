@@ -1,70 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Information</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<div class="container">
-    <!-- Header with Title -->
-    <div class="header">
-        <h1>Product Information</h1>
-    </div>
+    <div class="container">
+        <!-- Header with Title -->
+        <div class="header">
+            <h1>Product Information</h1>
+        </div>
 
-    <!-- Product Details Card -->
-    <div class="card">
-        <h3>Product Details</h3>
-        <p><strong>Batch ID:</strong> <span id="batch-id">BATCH1234</span></p>
-        <p><strong>Product Name:</strong> Organic Fresh Apples</p>
-        <p><strong>Manufacturer:</strong> XYZ Farms</p>
-        <p><strong>Manufacturing Date:</strong> <span id="mfg-date">2022-01-15</span></p>
-        <p><strong>Expiry Date:</strong> <span id="exp-date">2023-01-15</span></p>
-        <p><strong>Storage Conditions:</strong> 25°C - 30°C, Humidity 33% to 66% is Ideal</p>
-    </div>
+        <!-- Product Details Card -->
+        <div class="card">
+            <h3>Product Details</h3>
+            <!-- <p><strong>Batch ID:</strong> <span id="batch-id">BATCH1234</span></p> -->
+            <p><strong>Product Name:</strong> Organic Fresh Apples</p>
+            <!-- <p><strong>Manufacturer:</strong> XYZ Farms</p> -->
+            <p><strong>Manufacturing Date:</strong> <span id="mfg-date">2022-01-15</span></p>
+            <p><strong>Expiry Date:</strong> <span id="exp-date">2023-01-15</span></p>
+            <p><strong>Storage Conditions:</strong> 25°C - 30°C, Humidity 33% to 66% is Ideal</p>
+        </div>
 
-    <!-- Transit History -->
-    <div class="card">
-        <h3>Transit History</h3>
-        <p><strong>From Manufacturer:</strong> XYZ Farms</p>
-        <p><strong>To Retailer:</strong> Fresh Foods Market</p>
-        <p><strong>Transit Stages:</strong> Manufacturing → Warehouse A → Retailer</p>
-    </div>
+        <!-- Transit History -->
+        <div class="card">
+            <h3>Transit History</h3>
+            <p><strong>From Manufacturer:</strong> XYZ Farms</p>
+            <p><strong>To Retailer:</strong> Fresh Foods Market</p>
+            <p><strong>Transit Stages:</strong> Manufacturing → Warehouse A → Retailer</p>
+        </div>
 
-    <!-- Quality Bar -->
-    <div class="card">
-        <h3>Quality</h3>
-        <div class="gauge-container" id="quality-bar">
-            <div class="gauge-bar">
-                <div class="gauge-progress" id="gauge-progress"></div>
+        <!-- Quality Bar -->
+        <div class="card">
+            <h3>Quality</h3>
+            <div class="gauge-container" id="quality-bar">
+                <div class="gauge-bar">
+                    <div class="gauge-progress" id="gauge-progress"></div>
+                </div>
+                <div class="gauge-label" id="gauge-label">Bad</div>
             </div>
-            <div class="gauge-label" id="gauge-label">Excellent</div>
+        </div>
+
+        <!-- Product Insights -->
+        <div class="details">
+            <p><strong>Prescribed Storage Conditions:</strong></p>
+            <p>Temperature range: 25°C - 30°C; Humidity: less than 33% is less humid, <br>
+                33-66%: Moderate humidity, above 66%: High humidity.</p>
+        </div>
+
+        <!-- Graphs for Temperature and Humidity -->
+        <div class="graph-container" id="graph-container">
+            <div class="graph" id="temp-graph">
+                <h4>Temperature</h4>
+                <canvas id="temp-chart"></canvas>
+            </div>
+            <div class="graph" id="humidity-graph">
+                <h4>Humidity</h4>
+                <canvas id="humidity-chart"></canvas>
+            </div>
         </div>
     </div>
 
-    <!-- Product Insights -->
-    <div class="details">
-        <p><strong>Prescribed Storage Conditions:</strong></p>
-        <p>Temperature range: 25°C - 30°C; Humidity: less than 33% is less humid, <br>
-            33-66%: Moderate humidity, above 66%: High humidity.</p>
-    </div>
-
-    <!-- Graphs for Temperature and Humidity -->
-    <div class="graph-container" id="graph-container">
-        <div class="graph" id="temp-graph">
-            <h4>Temperature</h4>
-            <canvas id="temp-chart"></canvas>
-        </div>
-        <div class="graph" id="humidity-graph">
-            <h4>Humidity</h4>
-            <canvas id="humidity-chart"></canvas>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>

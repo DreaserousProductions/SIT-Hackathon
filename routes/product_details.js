@@ -38,7 +38,7 @@ router.get('/', (req, res) => {
             console.log(pid, id);
 
             for (const res1 of result) {
-                const { prodID, start, end } = plisReader(res1["PLIS"])
+                const { prodID, start, end } = plisReader(res1["PLIS"]);
 
                 if (prodID === pid) {
                     if (id >= start && id <= end) {
