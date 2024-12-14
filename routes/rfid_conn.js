@@ -36,16 +36,16 @@ router.get('/', (req, res) => {
 });
 
 router.get('/collect', (req, res) => {
-    const { wid, ppid } = req.query;
+    const { rfid } = req.query;
 
-    if (wid && ppid) {
+    if (rfid) {
         pool.getConnection((err, connection) => {
             if (err) {
                 return res.status(500).json({ message: 'Database connection failed', error: err });
             }
 
-            const query = 'UPDATE inventory SET COLLECTED = 1 WHERE WID = ? AND PPID = ?;';
-            connection.query(query, (err, result) => {
+            const query = 'SELECT PLIS FROM rfid_logs WHERE RFID = ? ORDER BY RLID DESC LIMIT 1;';
+            connection.query(query, [rfid], (err, result) => {
                 connection.release(); // Always release the connection
 
                 if (err) {
