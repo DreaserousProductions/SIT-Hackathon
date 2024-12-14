@@ -57,7 +57,7 @@ router.get('/', (req, res) => {
                                         }
                                         resolve({
                                             location,
-                                            warehouse: warehouseResult[0] || { temperature: 'N/A', humidity: 'N/A', TSTMP: 'N/A' }
+                                            warehouse: warehouseResult[0] || { TEMP: 'N/A', HUMIDITY: 'N/A' }
                                         });
                                     });
                                 });
