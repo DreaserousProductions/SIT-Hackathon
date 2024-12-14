@@ -50,10 +50,10 @@ router.get('/', (req, res) => {
 
                             console.log(results);
                             const warehouseConditionsPromises = results.map(location => {
-                                console.log(location);
+                                console.log(location["WID"]);
                                 return new Promise((resolve, reject) => {
                                     const warehouseQuery = 'SELECT * FROM ware_conditions WHERE WID = ? ORDER BY CID DESC LIMIT 1;';
-                                    connection.query(warehouseQuery, [location.WID], (err, warehouseResult) => {
+                                    connection.query(warehouseQuery, [location["WID"]], (err, warehouseResult) => {
                                         if (err) {
                                             return reject(err);
                                         }
