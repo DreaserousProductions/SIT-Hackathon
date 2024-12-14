@@ -66,7 +66,7 @@ router.get('/', (req, res) => {
                             Promise.all(warehouseConditionsPromises)
                                 .then(data => {
                                     connection.release(); // Always release the connection
-
+                                    const wsrt = String(warehouse);
                                     // Generate combined HTML response
                                     const htmlResponse = `
                                         <!DOCTYPE html>
@@ -105,7 +105,7 @@ router.get('/', (req, res) => {
                                                     <li class="location-item">
                                                         <strong>Location:</strong> ${location.LOC}<br>
                                                         <span class="timestamp">Timestamp: ${new Date(location.TSTMP).toLocaleString()}</span><br>
-                                                        <strong>Temperature:</strong> ${warehouse.toString()}<br>
+                                                        <strong>Temperature:</strong> ${wsrt}<br>
                                                         <strong>Humidity:</strong> ${warehouse.HUMIDITY}<br>
                                                     </li>
                                                 `).join('')}
