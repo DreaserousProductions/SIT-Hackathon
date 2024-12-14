@@ -48,78 +48,79 @@ router.get('/', (req, res) => {
                                 return res.status(500).json({ message: 'Failed to retrieve data', error: err });
                             }
 
-                            const warehouseID = results[0]?.WID;
-
-                            // Query for warehouse conditions
-                            const warehouseQuery = 'SELECT * FROM ware_conditions WHERE WID = ? ORDER BY CID DESC LIMIT 1;';
-                            connection.query(warehouseQuery, [warehouseID], (err, warehouseResult) => {
-                                connection.release(); // Always release the connection
-
-                                if (err) {
-                                    return res.status(500).json({ message: 'Failed to retrieve warehouse data', error: err });
-                                }
-
-                                // Generate combined HTML response
-                                const htmlResponse = `
-                                    <!DOCTYPE html>
-                                    <html lang="en">
-                                    <head>
-                                        <meta charset="UTF-8">
-                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                        <title>Product and Warehouse Details</title>
-                                        <style>
-                                            body {
-                                                font-family: Arial, sans-serif;
-                                                line-height: 1.6;
-                                                margin: 20px;
-                                            }
-                                            .location-list {
-                                                list-style-type: none;
-                                                padding: 0;
-                                            }
-                                            .location-item {
-                                                background: #f9f9f9;
-                                                margin: 10px 0;
-                                                padding: 15px;
-                                                border: 1px solid #ddd;
-                                                border-radius: 5px;
-                                            }
-                                            .timestamp {
-                                                font-size: 0.9em;
-                                                color: #555;
-                                            }
-                                            .condition {
-                                                background: #f9f9f9;
-                                                margin: 20px 0;
-                                                padding: 15px;
-                                                border: 1px solid #ddd;
-                                                border-radius: 5px;
-                                            }
-                                        </style>
-                                    </head>
-                                    <body>
-                                        <h1>Product Location History</h1>
-                                        <ul class="location-list">
-                                            ${results.map(r => `
-                                                <li class="location-item">
-                                                    <strong>Location:</strong> ${r.LOC}<br>
-                                                    <span class="timestamp">Timestamp: ${new Date(r.TSTMP).toLocaleString()}</span>
-                                                </li>
-                                            `).join('')}
-                                        </ul>
-
-                                        <h1>Warehouse Condition</h1>
-                                        <div class="condition">
-                                            <strong>Temperature:</strong> ${warehouseResult[0]?.temperature || 'N/A'}<br>
-                                            <strong>Humidity:</strong> ${warehouseResult[0]?.humidity || 'N/A'}<br>
-                                            <strong>Timestamp:</strong> ${new Date(warehouseResult[0]?.timestamp).toLocaleString() || 'N/A'}
-                                        </div>
-                                    </body>
-                                    </html>
-                                `;
-
-                                return res.status(200).send(htmlResponse);
+                            const warehouseConditionsPromises = results.map(location => {
+                                return new Promise((resolve, reject) => {
+                                    const warehouseQuery = 'SELECT * FROM ware_conditions WHERE WID = ? ORDER BY CID DESC LIMIT 1;';
+                                    connection.query(warehouseQuery, [location.WID], (err, warehouseResult) => {
+                                        if (err) {
+                                            return reject(err);
+                                        }
+                                        resolve({
+                                            location,
+                                            warehouse: warehouseResult[0] || { temperature: 'N/A', humidity: 'N/A', TSTMP: 'N/A' }
+                                        });
+                                    });
+                                });
                             });
+
+                            Promise.all(warehouseConditionsPromises)
+                                .then(data => {
+                                    connection.release(); // Always release the connection
+
+                                    // Generate combined HTML response
+                                    const htmlResponse = `
+                                        <!DOCTYPE html>
+                                        <html lang="en">
+                                        <head>
+                                            <meta charset="UTF-8">
+                                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                            <title>Product and Warehouse Details</title>
+                                            <style>
+                                                body {
+                                                    font-family: Arial, sans-serif;
+                                                    line-height: 1.6;
+                                                    margin: 20px;
+                                                }
+                                                .location-list {
+                                                    list-style-type: none;
+                                                    padding: 0;
+                                                }
+                                                .location-item {
+                                                    background: #f9f9f9;
+                                                    margin: 10px 0;
+                                                    padding: 15px;
+                                                    border: 1px solid #ddd;
+                                                    border-radius: 5px;
+                                                }
+                                                .timestamp {
+                                                    font-size: 0.9em;
+                                                    color: #555;
+                                                }
+                                            </style>
+                                        </head>
+                                        <body>
+                                            <h1>Product Location History</h1>
+                                            <ul class="location-list">
+                                                ${data.map(({ location, warehouse }) => `
+                                                    <li class="location-item">
+                                                        <strong>Location:</strong> ${location.LOC}<br>
+                                                        <span class="timestamp">Timestamp: ${new Date(location.TSTMP).toLocaleString()}</span><br>
+                                                        <strong>Temperature:</strong> ${warehouse.temperature}<br>
+                                                        <strong>Humidity:</strong> ${warehouse.humidity}<br>
+                                                        <strong>Warehouse Timestamp:</strong> ${new Date(warehouse.TSTMP).toLocaleString()}
+                                                    </li>
+                                                `).join('')}
+                                            </ul>
+                                        </body>
+                                        </html>
+                                    `;
+
+                                    return res.status(200).send(htmlResponse);
+                                })
+                                .catch(error => {
+                                    connection.release(); // Always release the connection
+                                    return res.status(500).json({ message: 'Failed to retrieve warehouse data', error });
+                                });
                         });
                         break;
                     }
