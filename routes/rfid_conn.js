@@ -56,7 +56,7 @@ router.get('/collect', (req, res) => {
             });
         });
     } else {
-        res.status(404).json({ message: 'No such order to be collected', result });
+        res.status(404).json({ message: 'No such order to be collected' });
     }
 });
 
